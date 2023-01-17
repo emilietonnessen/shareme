@@ -13,6 +13,7 @@ const Login = () => {
   // ✅ Success handler ✅
   const createOrGetUser = async (response) => {
     const decoded = jwt_decode(response.credential);
+    localStorage.setItem('user', JSON.stringify(decoded));
     const { name, picture, sub } = decoded;
 
     const user = {
