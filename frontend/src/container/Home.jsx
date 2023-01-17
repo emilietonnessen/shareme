@@ -28,7 +28,8 @@ const Home = () => {
     client.fetch(query).then((data) => {
       setUser(data[0]);
     });
-  }, [userInfo?.sub]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 📜 Scroll to top on first load 📜
   useEffect(() => {
