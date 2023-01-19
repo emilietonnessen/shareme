@@ -8,6 +8,7 @@ import logo from '../assets/logo.png';
 import { Sidebar, UserProfile } from '../components';
 import { client } from '../client';
 import { userQuery } from '../utils/data';
+import { fetchUser } from '../utils/fetchUser';
 
 const Home = () => {
   // 🎣 Hooks 🎣
@@ -16,10 +17,7 @@ const Home = () => {
   const scrollRef = useRef(null);
 
   // 🏛️ Get user from local storage 🏛️
-  const userInfo =
-    localStorage.getItem('user') !== 'undefined'
-      ? JSON.parse(localStorage.getItem('user'))
-      : localStorage.clear();
+  const userInfo = fetchUser();
 
   // 🦮 Fetch user data from sanity client 🦮
   useEffect(() => {
