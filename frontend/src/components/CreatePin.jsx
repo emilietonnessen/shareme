@@ -26,6 +26,7 @@ const CreatePin = ({ user }) => {
     const { type, name } = e.target.files[0];
     setWrongImageType(false);
 
+    // TODO: Add max 20MB file size
     if (
       type === 'image/png' ||
       type === 'image/svg' ||
@@ -81,6 +82,7 @@ const CreatePin = ({ user }) => {
       });
     } else {
       setFields(true);
+      // FIXME: I don't like handling errors like this. Add correct form validation instead
       setTimeout(() => {
         setFields(false);
       }, 2000);
