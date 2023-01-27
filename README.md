@@ -1,8 +1,19 @@
 # Shareme
 
-Course on YouTube
+Shareme is a social media app for image sharing created with React 18 + TypeScript, Tailwind and Sanity Client.
 
-https://www.youtube.com/watch?v=XxXyfkrP298&list=PL6QREj8te1P6wX9m5KnicnDVEucbOPsqR
+## Features
+
+- User profile
+- Create pins
+- See all pins
+- See pins by category
+- Save pins
+- See pin details
+- Login with Google oath
+- Search for pins
+
+Link to course: https://www.youtube.com/watch?v=XxXyfkrP298&list=PL6QREj8te1P6wX9m5KnicnDVEucbOPsqR
 
 ## Used technologies
 
