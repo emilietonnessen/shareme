@@ -20,8 +20,9 @@ const Pin = ({ pin, pin: { postedBy, image, _id, destination, save } }) => {
   const user = fetchUser();
 
   // Variables
-  const alreadySaved = !!save?.filter((item) => item.postedBy._id === user.sub)
-    ?.length;
+  const alreadySaved = !!save?.filter(
+    (item) => item?.postedBy._id === user?.sub
+  )?.length;
 
   // save pin
   const savePin = (id) => {
@@ -115,12 +116,12 @@ const Pin = ({ pin, pin: { postedBy, image, _id, destination, save } }) => {
                   className="bg-white flex items-center gap-2 text-black font-bold p-2 pl-4 pr-4 rounded-full opacity-70 hover:opacity-100 hover:shadow-md"
                 >
                   <BsFillArrowUpRightCircleFill />
-                  {destination.length > 15
-                    ? `${destination.slice(0, 15)}...`
+                  {destination?.length > 15
+                    ? `${destination?.slice(0, 15)}...`
                     : destination}
                 </a>
               )}
-              {postedBy?._id === user.sub && (
+              {postedBy?._id === user?.sub && (
                 <button
                   type="button"
                   className="bg-white p-2 opacity-70 hover:opacity-100 font-bold text-dark text-base rounded-3xl hover:shadow-md outline-none"
