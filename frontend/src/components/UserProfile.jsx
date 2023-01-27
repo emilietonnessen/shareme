@@ -1,5 +1,4 @@
 import { AiOutlineLogout } from 'react-icons/ai';
-import { googleLogout } from '@react-oauth/google';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
