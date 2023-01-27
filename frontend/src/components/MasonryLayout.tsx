@@ -1,4 +1,5 @@
 import Masonry from 'react-masonry-css';
+import { PinProps } from '../utils/schemaTypes';
 
 import Pin from './Pin';
 
@@ -11,11 +12,11 @@ const breakpointObj = {
   500: 1, // On 500px show 1 columns
 };
 
-const MasonryLayout = ({ pins }) => {
+const MasonryLayout = ({ pins }: { pins: PinProps[] }) => {
   return (
     <Masonry className="flex animate-slide-fwd" breakpointCols={breakpointObj}>
       {pins?.map((pin) => (
-        <Pin key={pin._id} pin={pin} className="w-max" />
+        <Pin key={pin._id} pin={pin} />
       ))}
     </Masonry>
   );

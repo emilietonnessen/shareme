@@ -4,12 +4,13 @@ import { useState, useEffect } from 'react';
 
 import MasonryLayout from './MasonryLayout';
 import Spinner from './Spinner';
-import { client } from './../client';
+import { client } from '../client';
+import { PinProps, UserProps } from './../utils/schemaTypes';
 import {
   userCreatedPinsQuery,
   userQuery,
   userSavedPinsQuery,
-} from './../utils/data';
+} from '../utils/data';
 
 const randomImage =
   'https://source.unsplash.com/1600x900/?nature,photography,technology';
@@ -21,10 +22,10 @@ const notActiveBtnStyles =
 
 const UserProfile = () => {
   // 🏡 Local state 🏡
-  const [user, setUser] = useState();
-  const [pins, setPins] = useState();
-  const [text, setText] = useState('Created');
-  const [activeBtn, setActiveBtn] = useState('created');
+  const [user, setUser] = useState<UserProps | null>(null);
+  const [pins, setPins] = useState<PinProps[]>([]);
+  const [text, setText] = useState<any>('Created');
+  const [activeBtn, setActiveBtn] = useState<string>('created');
 
   // 🎣 Hooks 🎣
   const navigate = useNavigate();
@@ -32,27 +33,31 @@ const UserProfile = () => {
 
   // Fetch user data
   useEffect(() => {
-    const query = userQuery(userId);
+    if (userId) {
+      const query = userQuery(userId);
 
-    client.fetch(query).then((data) => {
-      setUser(data[0]);
-    });
+      client.fetch(query).then((data) => {
+        setUser(data[0]);
+      });
+    }
   }, [userId]);
 
   // Fetch pins data
   useEffect(() => {
-    if (text === 'Created') {
-      const createdPinsQuery = userCreatedPinsQuery(userId);
+    if (userId) {
+      if (text === 'Created') {
+        const createdPinsQuery = userCreatedPinsQuery(userId);
 
-      client.fetch(createdPinsQuery).then((data) => {
-        setPins(data);
-      });
-    } else {
-      const savedPinsQuery = userSavedPinsQuery(userId);
+        client.fetch(createdPinsQuery).then((data) => {
+          setPins(data);
+        });
+      } else {
+        const savedPinsQuery = userSavedPinsQuery(userId);
 
-      client.fetch(savedPinsQuery).then((data) => {
-        setPins(data);
-      });
+        client.fetch(savedPinsQuery).then((data) => {
+          setPins(data);
+        });
+      }
     }
   }, [text, userId]);
 
@@ -102,7 +107,7 @@ const UserProfile = () => {
             <button
               type="button"
               onClick={(e) => {
-                setText(e.target.textContent);
+                setText(e?.currentTarget?.textContent);
                 setActiveBtn('created');
               }}
               className={`${
@@ -114,7 +119,7 @@ const UserProfile = () => {
             <button
               type="button"
               onClick={(e) => {
-                setText(e.target.textContent);
+                setText(e?.currentTarget?.textContent);
                 setActiveBtn('saved');
               }}
               className={`${

@@ -5,35 +5,38 @@ import { v4 as uuidv4 } from 'uuid';
 
 import MasonryLayout from './MasonryLayout';
 import Spinner from './Spinner';
-import { client, urlFor } from './../client';
-import { pinDetailMorePinQuery, pinDetailQuery } from './../utils/data';
+import { client, urlFor } from '../client';
+import { pinDetailMorePinQuery, pinDetailQuery } from '../utils/data';
+import { PinProps, UserProps } from './../utils/schemaTypes';
 
-const PinDetail = ({ user }) => {
+const PinDetail = ({ user }: { user: UserProps }) => {
   // 🏡 Local state 🏡
-  const [pins, setPins] = useState(null);
-  const [pinDetail, setPinDetail] = useState(null);
-  const [comment, setComment] = useState('');
-  const [addingComment, setAddingComment] = useState(false);
+  const [pins, setPins] = useState<PinProps[] | null>(null);
+  const [pinDetail, setPinDetail] = useState<PinProps | null>(null);
+  const [comment, setComment] = useState<string>('');
+  const [addingComment, setAddingComment] = useState<boolean>(false);
 
   // 🎣 Hooks 🎣
   const { pinId } = useParams();
 
   // ✉️ Fetch pin details handler ✉️
   const fetchPinDetails = () => {
-    let query = pinDetailQuery(pinId);
+    if (pinId) {
+      let query = pinDetailQuery(pinId);
 
-    if (query) {
-      client.fetch(query).then((data) => {
-        setPinDetail(data[0]);
+      if (query) {
+        client.fetch(query).then((data) => {
+          setPinDetail(data[0]);
 
-        if (data[0]) {
-          query = pinDetailMorePinQuery(data[0]);
+          if (data[0]) {
+            query = pinDetailMorePinQuery(data[0]);
 
-          client.fetch(query).then((response) => {
-            setPins(response);
-          });
-        }
-      });
+            client.fetch(query).then((response) => {
+              setPins(response);
+            });
+          }
+        });
+      }
     }
   };
 
@@ -46,7 +49,7 @@ const PinDetail = ({ user }) => {
   // FIXME: You have to wait and reload multiple times to get the new comment. Same with when you add pins. Check how to fix this. Check if it has anything to do with Sanity. IF thats the case I could add an info box with info about this being a portfolio project and the loading of data is a bit slower than a normal page.
   // TODO: Add possibility to delete comments
   const addComment = () => {
-    if (comment) {
+    if (comment && pinId) {
       setAddingComment(true);
 
       client
@@ -119,7 +122,7 @@ const PinDetail = ({ user }) => {
           </div>
 
           {/* Profile link */}
-          {/* TODO: Make this its own component as its copied from Pin.jsx and on line 130*/}
+          {/* TODO: Make this its own component as its copied from Pin.tsx and on line 130*/}
           <Link
             to={`user-profile/${pinDetail.postedBy?._id}`}
             className="flex gap-2 mt-5 items-center bg-white rounded-lg"
@@ -183,7 +186,7 @@ const PinDetail = ({ user }) => {
           </div>
         </div>
       </div>
-      {pins?.length > 0 ? (
+      {pins && pins?.length > 0 ? (
         <>
           <h2 className="text-center font-bold text-2xl mt-8 mb-4">
             More like this

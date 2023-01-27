@@ -1,19 +1,25 @@
 import jwt_decode from 'jwt-decode';
-import { GoogleLogin } from '@react-oauth/google';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 
 import logo from '../assets/logowhite.png';
 import shareVideo from '../assets/share.mp4';
 import { client } from '../client';
 
+interface DecodedProps {
+  name: string;
+  picture: string;
+  sub: string;
+}
+
 const Login = () => {
   // Hooks 🎣
   const navigate = useNavigate();
 
   // ✅ Success handler ✅
-  const createOrGetUser = async (response) => {
-    const decoded = jwt_decode(response.credential);
-    localStorage.setItem('user', JSON.stringify(decoded));
+  const createOrGetUser = async (response: CredentialResponse) => {
+    const decoded: DecodedProps = jwt_decode(response?.credential as string);
+
     const { name, picture, sub } = decoded;
 
     const user = {
@@ -28,18 +34,12 @@ const Login = () => {
     });
   };
 
-  // ❌ Error handler ❌
-  const onError = (error) => {
-    console.log('[error]', error);
-  };
-
   return (
     <div className="flex justify-start items-center flex-col h-screen">
       <div className="relative w-full h-full">
         {/* Background Video */}
         <video
           src={shareVideo}
-          type="video/mp4"
           loop
           controls={false}
           muted
@@ -56,10 +56,7 @@ const Login = () => {
 
           {/* Google Login */}
           <div className="shadow-2xl">
-            <GoogleLogin
-              onSuccess={(response) => createOrGetUser(response)}
-              onSError={onError}
-            />
+            <GoogleLogin onSuccess={(response) => createOrGetUser(response)} />
           </div>
         </div>
       </div>

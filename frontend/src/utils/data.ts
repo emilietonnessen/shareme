@@ -1,3 +1,5 @@
+import { PinProps } from './schemaTypes';
+
 export const categories = [
   {
     name: 'cars',
@@ -89,7 +91,7 @@ export const feedQuery = `*[_type == "pin"] | order(_createdAt desc) {
       },
     } `;
 
-export const pinDetailQuery = (pinId) => {
+export const pinDetailQuery = (pinId: string) => {
   const query = `*[_type == "pin" && _id == '${pinId}']{
     image{
       asset->{
@@ -126,8 +128,8 @@ export const pinDetailQuery = (pinId) => {
   return query;
 };
 
-export const pinDetailMorePinQuery = (pin) => {
-  const query = `*[_type == "pin" && category == '${pin.category}' && _id != '${pin._id}' ]{
+export const pinDetailMorePinQuery = (pin: PinProps) => {
+  const query = `*[_type == "pin" && category == '${pin?.category}' && _id != '${pin?._id}' ]{
     image{
       asset->{
         url
@@ -152,7 +154,7 @@ export const pinDetailMorePinQuery = (pin) => {
   return query;
 };
 
-export const searchQuery = (searchTerm) => {
+export const searchQuery = (searchTerm: string) => {
   const query = `*[_type == "pin" && title match '${searchTerm}*' || category match '${searchTerm}*' || about match '${searchTerm}*']{
         image{
           asset->{
@@ -178,12 +180,12 @@ export const searchQuery = (searchTerm) => {
   return query;
 };
 
-export const userQuery = (userId) => {
+export const userQuery = (userId: string) => {
   const query = `*[_type == "user" && _id == '${userId}']`;
   return query;
 };
 
-export const userCreatedPinsQuery = (userId) => {
+export const userCreatedPinsQuery = (userId: string) => {
   const query = `*[ _type == 'pin' && userId == '${userId}'] | order(_createdAt desc){
     image{
       asset->{
@@ -208,7 +210,7 @@ export const userCreatedPinsQuery = (userId) => {
   return query;
 };
 
-export const userSavedPinsQuery = (userId) => {
+export const userSavedPinsQuery = (userId: string) => {
   const query = `*[_type == 'pin' && '${userId}' in save[].userId ] | order(_createdAt desc) {
     image{
       asset->{

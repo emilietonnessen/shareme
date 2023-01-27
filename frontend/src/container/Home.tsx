@@ -5,16 +5,18 @@ import { useState, useRef, useEffect } from 'react';
 
 import Pins from './Pins';
 import logo from '../assets/logo.png';
-import { Sidebar, UserProfile } from '../components';
 import { client } from '../client';
 import { userQuery } from '../utils/data';
 import { fetchUser } from '../utils/fetchUser';
+import { UserProps } from './../utils/schemaTypes';
+import Sidebar from '../components/Sidebar';
+import UserProfile from '../components/UserProfile';
 
 const Home = () => {
   // 🎣 Hooks 🎣
-  const [toggleSidebar, setToggleSidebar] = useState(false);
-  const [user, setUser] = useState(null);
-  const scrollRef = useRef(null);
+  const [toggleSidebar, setToggleSidebar] = useState<boolean>(false);
+  const [user, setUser] = useState<UserProps | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   // 🏛️ Get user from local storage 🏛️
   const userInfo = fetchUser();
@@ -31,13 +33,13 @@ const Home = () => {
 
   // 📜 Scroll to top on first load 📜
   useEffect(() => {
-    scrollRef.current.scrollTo(0, 0);
+    scrollRef?.current?.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="flex bg-gray-50 md:flex-row flex-col h-screen transition-height duration-75 ease-out">
       <div className="hidden md:flex h-screen flex-initial">
-        <Sidebar user={user && user} />
+        {user && <Sidebar user={user} />}
       </div>
       <div className="flex md:hidden flex-row">
         <div className="p-2 w-full flex flex-row justify-between items-center shadow-md">
@@ -62,14 +64,14 @@ const Home = () => {
                 onClick={() => setToggleSidebar(false)}
               />
             </div>
-            <Sidebar user={user && user} closeToggle={setToggleSidebar} />
+            {user && <Sidebar user={user} closeToggle={setToggleSidebar} />}
           </div>
         )}
       </div>
       <div className="pb-2 flex-1 h-screen overflow-y-scroll" ref={scrollRef}>
         <Routes>
           <Route path="/user-profile/:userId" element={<UserProfile />} />
-          <Route path="/*" element={<Pins user={user && user} />} />
+          {user && <Route path="/*" element={<Pins user={user} />} />}
         </Routes>
       </div>
     </div>

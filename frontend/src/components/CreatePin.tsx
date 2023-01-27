@@ -3,26 +3,30 @@ import { MdDelete } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-import { Spinner } from '.';
 import { categories } from '../utils/data';
 import { client } from '../client';
+import { UserProps } from './../utils/schemaTypes';
+import { SanityImageAssetDocument } from '@sanity/client';
+import Spinner from './Spinner';
 
-const CreatePin = ({ user }) => {
+const CreatePin = ({ user }: { user: UserProps }) => {
   // 🏡 Local state 🏡
-  const [title, setTitle] = useState('');
-  const [about, setAbout] = useState('');
-  const [destination, setDestination] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [fields, setFields] = useState(null);
-  const [category, setCategory] = useState(null);
-  const [imageAsset, setImageAsset] = useState(null);
-  const [wrongImageType, setWrongImageType] = useState(false);
+  const [title, setTitle] = useState<string>('');
+  const [about, setAbout] = useState<string>('');
+  const [destination, setDestination] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [fields, setFields] = useState<boolean>(false);
+  const [category, setCategory] = useState<string>('');
+  const [imageAsset, setImageAsset] = useState<SanityImageAssetDocument | null>(
+    null
+  );
+  const [wrongImageType, setWrongImageType] = useState<boolean>(false);
 
   // 🎣 Hooks 🎣
   const navigate = useNavigate();
 
   // ⬆️📸 Upload image handler ⬆️📸
-  const uploadImage = (e) => {
+  const uploadImage = (e: any) => {
     const { type, name } = e.target.files[0];
     setWrongImageType(false);
 

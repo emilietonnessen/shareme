@@ -1,7 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { IoMdAdd, IoMdSearch } from 'react-icons/io';
+import { UserProps } from './../utils/schemaTypes';
 
-const Navbar = ({ searchTerm, setSearchTerm, user }) => {
+interface NavbarProps {
+  searchTerm: string;
+  setSearchTerm: any;
+  user: UserProps;
+}
+
+const Navbar = ({ searchTerm, setSearchTerm, user }: NavbarProps) => {
   // 🎣 Hooks 🎣
   const navigate = useNavigate();
 

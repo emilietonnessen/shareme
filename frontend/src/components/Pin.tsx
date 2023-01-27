@@ -7,8 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { client, urlFor } from '../client';
 import { fetchUser } from '../utils/fetchUser';
+import { PinProps } from '../utils/schemaTypes';
 
-const Pin = ({ pin, pin: { postedBy, image, _id, destination, save } }) => {
+const Pin = ({ pin }: { pin: PinProps }) => {
   // State
   const [postHovered, setPostHovered] = useState(false);
   const [savingPost, setSavingPost] = useState(false);
@@ -20,12 +21,13 @@ const Pin = ({ pin, pin: { postedBy, image, _id, destination, save } }) => {
   const user = fetchUser();
 
   // Variables
+  const { postedBy, image, _id, destination, save } = pin;
   const alreadySaved = !!save?.filter(
     (item) => item?.postedBy._id === user?.sub
   )?.length;
 
   // save pin
-  const savePin = (id) => {
+  const savePin = (id: string) => {
     if (!alreadySaved) {
       setSavingPost(true);
 
@@ -51,14 +53,14 @@ const Pin = ({ pin, pin: { postedBy, image, _id, destination, save } }) => {
   };
 
   // Delete pin
-  const deletePin = (id) => {
+  const deletePin = (id: string) => {
     client.delete(id).then(() => {
       window.location.reload();
     });
   };
 
   return (
-    <div className="m-2 ">
+    <div className="m-2">
       <div
         onMouseEnter={() => setPostHovered(true)}
         onMouseLeave={() => setPostHovered(false)}

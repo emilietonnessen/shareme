@@ -3,13 +3,14 @@ import { useParams } from 'react-router-dom';
 
 import { client } from '../client';
 import { feedQuery, searchQuery } from '../utils/data';
+import { PinProps } from '../utils/schemaTypes';
 import MasonryLayout from './MasonryLayout';
 import Spinner from './Spinner';
 
 const Feed = () => {
   // State
-  const [loading, setLoading] = useState(false);
-  const [pins, setPins] = useState(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [pins, setPins] = useState<PinProps[]>([]);
 
   // Hooks
   const { categoryId } = useParams();

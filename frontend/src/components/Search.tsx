@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 
 import MasonryLayout from './MasonryLayout';
 import Spinner from './Spinner';
-import { client } from './../client';
-import { feedQuery, searchQuery } from './../utils/data';
+import { client } from '../client';
+import { feedQuery, searchQuery } from '../utils/data';
+import { PinProps } from '../utils/schemaTypes';
 
-const Search = ({ searchTerm }) => {
+const Search = ({ searchTerm }: { searchTerm: string }) => {
   // 🏡 Local state 🏡
-  const [pins, setPins] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [pins, setPins] = useState<PinProps[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // 🎣 Hooks 🎣
 

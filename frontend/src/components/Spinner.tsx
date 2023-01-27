@@ -1,6 +1,6 @@
 import { Circles } from 'react-loader-spinner';
 
-const Spinner = ({ message }) => {
+const Spinner = ({ message }: { message?: string }) => {
   return (
     <div className="flex flex-col justify-center items-center w-full h-full">
       <Circles
