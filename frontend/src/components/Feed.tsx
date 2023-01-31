@@ -1,47 +1,77 @@
-import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-import { client } from '../client';
-import { feedQuery, searchQuery } from '../utils/data';
-import { PinProps } from '../utils/schemaTypes';
+import ErrorBox from './ErrorBox';
+import InfoBox from './InfoBox';
 import MasonryLayout from './MasonryLayout';
 import Spinner from './Spinner';
+import { PinProps } from '../utils/schemaTypes';
+import { client } from '../client';
+import { feedQuery, searchQuery } from '../utils/data';
 
 const Feed = () => {
-  // State
+  // 🏡 Local state 🏡
   const [loading, setLoading] = useState<boolean>(false);
   const [pins, setPins] = useState<PinProps[]>([]);
+  const [error, setError] = useState(false);
 
-  // Hooks
+  // 🎣 Hooks 🎣
   const { categoryId } = useParams();
 
+  // 🦮 Fetch pins either based on category or all pins 🦮
   useEffect(() => {
     setLoading(true);
+    setError(false);
 
     if (categoryId) {
       const query = searchQuery(categoryId);
 
-      client.fetch(query).then((data) => {
-        setPins(data);
-      });
+      client
+        .fetch(query)
+        .then((data) => {
+          setPins(data);
+        })
+        .catch(() => {
+          setError(true);
+        });
 
       setLoading(false);
     } else {
-      client.fetch(feedQuery).then((data) => {
-        setPins(data);
-        setLoading(false);
-      });
+      client
+        .fetch(feedQuery)
+        .then((data) => {
+          setPins(data);
+          setLoading(false);
+        })
+        .catch(() => {
+          setError(true);
+        });
     }
 
     setLoading(false);
   }, [categoryId]);
 
-  if (loading)
-    return <Spinner message="We are adding new ideas to your feed!" />;
-
-  if (!pins?.length) return <h2>No pins available</h2>;
-
-  return <div>{pins && <MasonryLayout pins={pins} />}</div>;
+  return (
+    <main>
+      <h1 className="text-3xl ml-2 mb-4">
+        Explore and share pins with your friends
+      </h1>
+      <div aria-live="polite">
+        {loading ? (
+          <Spinner message="Loading pins" />
+        ) : error ? (
+          <ErrorBox message="Something bad happened, try again later.." />
+        ) : !pins?.length ? (
+          <div className="text-lg text-gray-600 p-2">No pins available.</div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            <InfoBox message="Currently not able to unsave pins. Currently working on a fix." />
+            {pins && <MasonryLayout pins={pins} />}
+          </div>
+        )}
+      </div>
+    </main>
+  );
 };
 
 export default Feed;
