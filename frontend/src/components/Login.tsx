@@ -1,10 +1,12 @@
 import jwt_decode from 'jwt-decode';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 import logo from '../assets/logowhite.png';
 import shareVideo from '../assets/share.mp4';
 import { client } from '../client';
+import Spinner from './Spinner';
 
 interface DecodedProps {
   name: string;
@@ -13,24 +15,33 @@ interface DecodedProps {
 }
 
 const Login = () => {
+  // 🏡 Local state 🏡
+  const [loading, setLoading] = useState<boolean>(false);
+
   // 🎣 Hooks 🎣
   const navigate = useNavigate();
 
   // ✅ Success handler ✅
   const createOrGetUser = async (response: CredentialResponse) => {
+    setLoading(true);
+
+    // Get the user data from the response
     const decoded: DecodedProps = jwt_decode(response?.credential as string);
 
-    const { name, picture, sub } = decoded;
+    // Set the decoded user data in the local storage
+    localStorage.setItem('user', JSON.stringify(decoded));
 
     const user = {
-      _id: sub,
+      _id: decoded?.sub,
       _type: 'user',
-      userName: name,
-      image: picture,
+      userName: decoded?.name,
+      image: decoded?.picture,
     };
 
+    // If user does not exist, then create a new one. If not login
     client.createIfNotExists(user).then(() => {
       navigate('/', { replace: true });
+      setLoading(false);
     });
   };
 
@@ -55,9 +66,15 @@ const Login = () => {
           </div>
 
           {/* Google Login */}
-          <div className="shadow-2xl">
-            {/* There is a problem with the GoogleLogin button were the outline is not visible when tabbing to it. It will however be activated, but it won't be visually seen as focused. */}
-            <GoogleLogin onSuccess={(response) => createOrGetUser(response)} />
+          <div aria-live="polite">
+            {/* FIXME: There is a problem with the GoogleLogin button were the outline is not visible when tabbing to it. It will however be activated, but it won't be visually seen as focused. */}
+            {loading ? (
+              <Spinner />
+            ) : (
+              <GoogleLogin
+                onSuccess={(response) => createOrGetUser(response)}
+              />
+            )}
           </div>
         </div>
       </div>
