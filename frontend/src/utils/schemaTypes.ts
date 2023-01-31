@@ -23,6 +23,7 @@ export interface PostedByProps extends UserProps {
 export interface SaveProps {
   postedBy: PostedByProps;
   userId: string;
+  _key: string;
 }
 
 export interface UserProps {
