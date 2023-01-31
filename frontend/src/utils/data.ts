@@ -76,6 +76,8 @@ export const feedQuery = `*[_type == "pin"] | order(_createdAt desc) {
   },
       _id,
       destination,
+      about,
+      title,
       postedBy->{
         _id,
         userName,
@@ -163,6 +165,8 @@ export const searchQuery = (searchTerm: string) => {
         },
             _id,
             destination,
+            title,
+            about,
             postedBy->{
               _id,
               userName,
