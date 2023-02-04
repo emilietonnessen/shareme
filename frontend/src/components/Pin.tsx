@@ -1,156 +1,139 @@
-import { AiTwotoneDelete } from 'react-icons/ai';
-import { BsFillArrowUpRightCircleFill } from 'react-icons/bs';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { MdDownloadForOffline } from 'react-icons/md';
+import { TiHeart, TiHeartOutline } from 'react-icons/ti';
 import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
+import SpinnerSmall from './SpinnerSmall';
+import { PinProps } from '../utils/schemaTypes';
 import { client, urlFor } from '../client';
 import { fetchUser } from '../utils/fetchUser';
-import { PinProps } from '../utils/schemaTypes';
 
-const Pin = ({ pin }: { pin: PinProps }) => {
-  // State
-  const [postHovered, setPostHovered] = useState(false);
-  const [savingPost, setSavingPost] = useState(false);
+const Pin = ({ pin: { image, _id, about, saved } }: { pin: PinProps }) => {
+  // 🏡 Local state 🏡
+  const [savingPin, setSavingPin] = useState(false);
+  const [isSaved, setIsSaved] = useState(saved);
 
-  // Hooks
-  const navigate = useNavigate();
-
-  // Local storage user info
+  // 🦮 Fetch user data from local storage 🦮
   const user = fetchUser();
 
-  // Variables
-  const { postedBy, image, _id, destination, save } = pin;
-  const alreadySaved = !!save?.filter(
-    (item) => item?.postedBy._id === user?.sub
-  )?.length;
+  // ♟️ Variables ♟️
+  const buttonStyles =
+    'absolute top-2 right-2 bg-white opacity-70 hover:opacity-100 p-2 rounded-3xl hover:shadow-md cursor-pointer';
 
-  // save pin
-  const savePin = (id: string) => {
-    if (!alreadySaved) {
-      setSavingPost(true);
+  // Save pin
+  const addOrRemovePinFromFavorites = (id: string, addPin: boolean) => {
+    setSavingPin(true);
 
-      client
-        .patch(id)
-        .setIfMissing({ save: [] })
-        .insert('after', 'save[-1]', [
-          {
-            _key: uuidv4(),
-            userId: user.sub,
-            postedBy: {
-              _type: postedBy,
-              _ref: user.sub,
-            },
-          },
-        ])
-        .commit()
-        .then(() => {
-          window.location.reload();
-          setSavingPost(false);
-        });
-    }
-  };
-
-  // Delete pin
-  const deletePin = (id: string) => {
-    client.delete(id).then(() => {
-      window.location.reload();
-    });
+    client
+      .patch(id, {
+        set: {
+          saved: addPin,
+        },
+      })
+      .commit()
+      .then((data) => {
+        setIsSaved(data?.saved);
+        setSavingPin(false);
+      })
+      .catch(() => {
+        setIsSaved(false);
+      });
   };
 
   return (
-    <div className="m-2">
-      <div
-        onMouseEnter={() => setPostHovered(true)}
-        onMouseLeave={() => setPostHovered(false)}
-        onClick={() => navigate(`/pin-detail/${_id}`)}
-        className="relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out"
-      >
-        <img
-          src={urlFor(image).width(250).url()}
-          alt="user post"
-          className="rounded-lg w-full"
-        />
+    <figure className="m-2 relative">
+      <div className="relative">
+        {/* 📸 Image link to pin details 📸 */}
+        <Link
+          to={`/pin-detail/${_id}`}
+          className="relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out "
+          itemProp="contentUrl"
+        >
+          <img
+            src={urlFor(image).width(800).url()}
+            alt=""
+            className="rounded-lg w-full bg-red-500"
+          />
+          <span className="sr-only">See the pin details of {about}</span>
+        </Link>
 
-        {postHovered && (
-          <div
-            className="absolute top-0 w-full h-full flex flex-col justify-between p-1 pr-2 pt-2 pb-2 z-50"
-            style={{ height: '100%' }}
+        {/* ⬇️ Download icon ⬇️ */}
+        <a
+          href={`${image?.asset?.url}?dl=`}
+          download
+          onClick={(e) => e.stopPropagation()}
+          className="absolute top-2 left-2 bg-white w-9 h-9 rounded-full flex items-center justify-center text-dark text-xl opacity-80 hover:opacity-100 hover:shadow-md"
+        >
+          <MdDownloadForOffline fontSize={20} />
+          <span className="sr-only">Download image of {about}</span>
+        </a>
+
+        {/* ❤️ Heart icon ❤️ */}
+        {isSaved ? (
+          <button
+            className={buttonStyles}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsSaved(false);
+              addOrRemovePinFromFavorites(_id, false);
+            }}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex gap-2">
-                <a
-                  href={`${image?.asset?.url}?dl=`}
-                  download
-                  onClick={(e) => e.stopPropagation()}
-                  className="bg-white w-9 h-9 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none"
-                >
-                  <MdDownloadForOffline />
-                </a>
-              </div>
-              {alreadySaved ? (
-                <button
-                  type="button"
-                  className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none"
-                >
-                  {save?.length} Saved
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="bg-red-500 opacity-70 hover:opacity-100 text-white font-bold px-5 py-1 text-base rounded-3xl hover:shadow-md outline-none"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    savePin(_id);
-                  }}
-                >
-                  {savingPost ? 'Saving' : 'Save'}
-                </button>
-              )}
-            </div>
-            <div className="flex justify-between items-center gap-2 w-full">
-              {destination && (
-                <a
-                  href={destination}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-white flex items-center gap-2 text-black font-bold p-2 pl-4 pr-4 rounded-full opacity-70 hover:opacity-100 hover:shadow-md"
-                >
-                  <BsFillArrowUpRightCircleFill />
-                  {destination?.length > 15
-                    ? `${destination?.slice(0, 15)}...`
-                    : destination}
-                </a>
-              )}
-              {postedBy?._id === user?.sub && (
-                <button
-                  type="button"
-                  className="bg-white p-2 opacity-70 hover:opacity-100 font-bold text-dark text-base rounded-3xl hover:shadow-md outline-none"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deletePin(_id);
-                  }}
-                >
-                  <AiTwotoneDelete />
-                </button>
-              )}
-            </div>
-          </div>
+            {savingPin ? (
+              <>
+                <SpinnerSmall />
+
+                <span className="sr-only">Removing pins from favorites</span>
+              </>
+            ) : (
+              <>
+                <TiHeart fontSize={20} color="red" />
+                <span className="sr-only">Remove pin from favorites</span>
+              </>
+            )}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={buttonStyles}
+            onClick={(e) => {
+              e.stopPropagation();
+              addOrRemovePinFromFavorites(_id, true);
+              setIsSaved(true);
+            }}
+          >
+            {savingPin ? (
+              <>
+                <SpinnerSmall />
+                <span className="sr-only">Adding pin to favorites</span>
+              </>
+            ) : (
+              <>
+                <TiHeartOutline fontSize={20} />
+                <span className="sr-only">Add pin to favorites</span>
+              </>
+            )}
+          </button>
         )}
       </div>
+
+      {/* 🧑 User link 🧑 */}
       <Link
-        to={`user-profile/${postedBy?._id}`}
-        className="flex gap-2 mt-2 items-center"
+        to={`user-profile/${user?.sub}`}
+        className="flex p-2 gap-2 items-center text-white mt-1 w-full"
+        onClick={(e) => e.stopPropagation()}
       >
         <img
-          src={postedBy?.image}
-          alt="user-profile"
+          src={user.picture}
+          alt=""
           className="w-8 h-8 rounded-full object-cover"
         />
-        <p className="font-semibold capitalize">{postedBy?.userName}</p>
+        <p className="text-black text-sm font-semibold">
+          <span className="sr-only">Go to</span>
+          <span> {user?.given_name}</span>
+          <span className="sr-only">s profile page</span>
+        </p>
       </Link>
-    </div>
+    </figure>
   );
 };
 
