@@ -8,7 +8,12 @@ import PinDetail from '../components/PinDetail';
 import Search from '../components/Search';
 import { UserProps } from './../utils/schemaTypes';
 
-const Pins = ({ user }: { user: UserProps }) => {
+interface PinsProps {
+  user: UserProps;
+  setToggleSidebar: (toggleSidebar: boolean) => void;
+}
+
+const Pins = ({ user, setToggleSidebar }: PinsProps) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   return (
