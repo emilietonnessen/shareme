@@ -7,6 +7,7 @@ import Navbar from '../components/Navbar';
 import PinDetail from '../components/PinDetail';
 import Search from '../components/Search';
 import { UserProps } from './../utils/schemaTypes';
+import UserProfile from '../components/UserProfile';
 
 interface PinsProps {
   user: UserProps;
@@ -23,6 +24,7 @@ const Pins = ({ user, setToggleSidebar }: PinsProps) => {
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           user={user}
+          setToggleSidebar={setToggleSidebar}
         />
       </div>
       <div className="h-full px-2 md:px-5">
