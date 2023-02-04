@@ -6,8 +6,8 @@ import Feed from '../components/Feed';
 import Navbar from '../components/Navbar';
 import PinDetail from '../components/PinDetail';
 import Search from '../components/Search';
-import { UserProps } from './../utils/schemaTypes';
 import UserProfile from '../components/UserProfile';
+import { UserProps } from './../utils/schemaTypes';
 
 interface PinsProps {
   user: UserProps;
