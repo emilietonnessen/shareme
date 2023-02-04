@@ -1,14 +1,16 @@
-import { Circles } from 'react-loader-spinner';
+import { Oval } from 'react-loader-spinner';
 
 const Spinner = ({ message }: { message?: string }) => {
   return (
     <div className="flex flex-col justify-center items-center w-full h-full">
-      <Circles
+      <Oval
         color="#00BFFF"
+        secondaryColor="#B5B5B5"
         height={50}
         width={200}
         wrapperClass="m-5"
-        ariaLabel="circles-loading"
+        ariaLabel="oval-loading"
+        strokeWidth={4}
       />
 
       <p className="text-lg text-center px-2">{message}</p>
