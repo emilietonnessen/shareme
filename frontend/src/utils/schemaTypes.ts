@@ -12,20 +12,13 @@ export interface PinProps {
   image: ImageProps;
   userId: string;
   postedBy: UserProps;
-  save: SaveProps[];
+  saved: boolean;
   comments: CommentsProps[];
 }
 
 export interface PostedByProps extends UserProps {
   image: string;
 }
-
-export interface SaveProps {
-  postedBy: PostedByProps;
-  userId: string;
-  _key: string;
-}
-
 export interface UserProps {
   userName: string;
   image: string;
