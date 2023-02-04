@@ -42,10 +42,9 @@ export default {
       type: 'postedBy',
     },
     {
-      name: 'save',
-      title: 'Save',
-      type: 'array',
-      of: [{type: 'save'}],
+      name: 'saved',
+      title: 'Saved',
+      type: 'boolean',
     },
     {
       name: 'comments',
