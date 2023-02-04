@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import ErrorBox from './ErrorBox';
-import InfoBox from './InfoBox';
 import MasonryLayout from './MasonryLayout';
 import Spinner from './Spinner';
 import { PinProps } from '../utils/schemaTypes';
@@ -65,7 +64,6 @@ const Feed = () => {
           <div className="text-lg text-gray-600 p-2">No pins available.</div>
         ) : (
           <div className="flex flex-col gap-4">
-            <InfoBox message="Currently not able to unsave pins. Currently working on a fix." />
             {pins && <MasonryLayout pins={pins} />}
           </div>
         )}
