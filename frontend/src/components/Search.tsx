@@ -1,36 +1,14 @@
-import { useState, useEffect } from 'react';
-
 import MasonryLayout from './MasonryLayout';
 import Spinner from './Spinner';
-import { client } from '../client';
-import { feedQuery, searchQuery } from '../utils/data';
 import { PinProps } from '../utils/schemaTypes';
 
-const Search = ({ searchTerm }: { searchTerm: string }) => {
-  // 🏡 Local state 🏡
-  const [pins, setPins] = useState<PinProps[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+interface SearchProps {
+  loading: boolean;
+  pins: PinProps[];
+  searchTerm: string;
+}
 
-  // 🎣 Hooks 🎣
-
-  useEffect(() => {
-    if (searchTerm) {
-      setLoading(true);
-
-      const query = searchQuery(searchTerm.toLowerCase());
-
-      client.fetch(query).then((data) => {
-        setPins(data);
-        setLoading(false);
-      });
-    } else {
-      client.fetch(feedQuery).then((data) => {
-        setPins(data);
-        setLoading(false);
-      });
-    }
-  }, [searchTerm]);
-
+const Search = ({ loading, pins, searchTerm }: SearchProps) => {
   return (
     <div>
       {/* Loader */}

@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 import CreatePin from '../components/CreatePin';
@@ -7,24 +7,53 @@ import Navbar from '../components/Navbar';
 import PinDetail from '../components/PinDetail';
 import Search from '../components/Search';
 import UserProfile from '../components/UserProfile';
-import { UserProps } from './../utils/schemaTypes';
+import { PinProps, UserProps } from './../utils/schemaTypes';
+import { client } from '../client';
+import { feedQuery, searchQuery } from '../utils/data';
 
 interface PinsProps {
-  user: UserProps;
   setToggleSidebar: (toggleSidebar: boolean) => void;
+  user: UserProps;
 }
 
-const Pins = ({ user, setToggleSidebar }: PinsProps) => {
+const Pins = ({ setToggleSidebar, user }: PinsProps) => {
+  // 🏡 Local state 🏡
+  const [loading, setLoading] = useState<boolean>(false);
+  const [pins, setPins] = useState<PinProps[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  // 🎣 Hooks 🎣
+  const navigate = useNavigate();
+
+  // 🔎 Search handler 🔎
+  const searchHandler = () => {
+    if (searchTerm) {
+      navigate('/search');
+      setLoading(true);
+
+      const query = searchQuery(searchTerm.toLowerCase());
+
+      client.fetch(query).then((data) => {
+        setPins(data);
+        setLoading(false);
+      });
+    } else {
+      client.fetch(feedQuery).then((data) => {
+        setPins(data);
+        setLoading(false);
+      });
+    }
+  };
 
   return (
     <div>
       <div className="bg-grey-50">
         <Navbar
+          searchHandler={searchHandler}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          user={user}
           setToggleSidebar={setToggleSidebar}
+          user={user}
         />
       </div>
       <div className="h-full px-2 md:px-5">
@@ -37,7 +66,12 @@ const Pins = ({ user, setToggleSidebar }: PinsProps) => {
           />
           <Route path="/user-profile/:userId" element={<UserProfile />} />
           <Route path="/create-pin" element={<CreatePin user={user} />} />
-          <Route path="/search" element={<Search searchTerm={searchTerm} />} />
+          <Route
+            path="/search"
+            element={
+              <Search searchTerm={searchTerm} loading={loading} pins={pins} />
+            }
+          />
         </Routes>
       </div>
     </div>
