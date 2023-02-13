@@ -12,6 +12,7 @@ interface NavbarProps {
   setSearchTerm: any;
   setToggleSidebar: (toggleSidebar: boolean) => void;
   user: UserProps;
+  pathname: string;
 }
 
 const Navbar = ({
@@ -20,11 +21,19 @@ const Navbar = ({
   setSearchTerm,
   setToggleSidebar,
   user,
+  pathname,
 }: NavbarProps) => {
+  const shouldNavbarBeFullWidth =
+    pathname === '/' || pathname.includes('/category/');
+
   return (
-    <header className="flex flex-col  w-full mx-auto">
+    <header
+      className={`flex flex-col w-full ${
+        shouldNavbarBeFullWidth ? '' : 'mx-auto max-w-6xl'
+      }`}
+    >
       {/* Search bar */}
-      <div className="flex gap-2 md:gap-5 w-full mt-5 pb-7 py-2 md:p-5 md:flex-row  items-end flex-col-reverse">
+      <div className="flex gap-2 md:gap-5 w-full mt-5 pb-7 p-2 md:py-5 md:px-0 md:flex-row  items-end flex-col-reverse">
         {/* Search input */}
         <div className="w-full">
           <SearchBar

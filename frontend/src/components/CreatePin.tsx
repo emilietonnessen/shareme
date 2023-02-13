@@ -100,7 +100,7 @@ const CreatePin = ({ user }: { user: UserProps }) => {
           Please fill in all the fields.
         </p>
       )}
-      <div className="flex lg:flex-row flex-col justify-center items-center bg-white lg:p-5 p-3 lg:w-4/5 w-full">
+      <div className="flex lg:flex-row flex-col justify-center items-center bg-white lg:p-5 p-3 max-w-6xl w-full rounded-md">
         <div className="bg-secondaryColor p-3 flex flex-0.7 w-full">
           <div className="flex justify-center items-center flex-col border-2 border-dotted border-gray-300 p-3 w-full h-420">
             {loading && <Spinner />}
@@ -151,16 +151,6 @@ const CreatePin = ({ user }: { user: UserProps }) => {
             placeholder="Add your title"
             className="outline-none text-2xl sm:text-3xl font-bold border-b-2 border-gray-200 p-2"
           />
-          {user && (
-            <div className="flex gap-2 my-2 items-center bg-white rounded-lg">
-              <img
-                src={user.image}
-                alt="user-profile"
-                className="w-10 h-10 rounded-full"
-              />
-              <p className="font-bold">{user.userName}</p>
-            </div>
-          )}
           <input
             type="text"
             value={about}
@@ -184,7 +174,7 @@ const CreatePin = ({ user }: { user: UserProps }) => {
                 name=""
                 id=""
                 onChange={(e) => setCategory(e.target.value)}
-                className="outline-none w-4/5 text-base border-b-2 border-gray-200 p-2 rounded-md cursor-pointer"
+                className="w-full outline-none text-base border-b-2 border-gray-200 p-2 cursor-pointer"
               >
                 <option value="other" className="vg.white">
                   Select category
@@ -200,9 +190,9 @@ const CreatePin = ({ user }: { user: UserProps }) => {
                 ))}
               </select>
             </div>
-            <div className="flex justify-end items-end mt-5">
+            <div className="flex justify-start items-end mt-5">
               <button
-                className="bg-red-500 text-white font-bold p-2 rounded-full w-28 outline-none"
+                className="bg-salmon text-white font-bold p-2 rounded-md w-full sm:w-28 outline-none"
                 type="button"
                 onClick={savePin}
               >

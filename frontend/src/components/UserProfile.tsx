@@ -74,9 +74,9 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="relative pb-2 h-full justify-center items-center">
+    <div className="relative pb-2 h-full justify-center items-center max-w-6xl mx-auto">
       <div className="flex flex-col pb-5">
-        <div className="relative flex flex-col mb-7">
+        <div className="relative flex flex-col mb-7 gap-4">
           <div className="flex flex-col justify-center items-center">
             <img
               src={randomImage}
@@ -130,7 +130,7 @@ const UserProfile = () => {
             </button>
           </div>
           {pins?.length ? (
-            <div className="px-2">
+            <div className="sm:px-2">
               <MasonryLayout pins={pins} />
             </div>
           ) : (

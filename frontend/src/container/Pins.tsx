@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
 import CreatePin from '../components/CreatePin';
@@ -24,6 +24,7 @@ const Pins = ({ setToggleSidebar, user }: PinsProps) => {
 
   // 🎣 Hooks 🎣
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 🔎 Search handler 🔎
   const searchHandler = () => {
@@ -47,8 +48,9 @@ const Pins = ({ setToggleSidebar, user }: PinsProps) => {
 
   return (
     <div>
-      <div className="bg-grey-50">
+      <div className="bg-grey-50 md:px-5">
         <Navbar
+          pathname={location.pathname}
           searchHandler={searchHandler}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}

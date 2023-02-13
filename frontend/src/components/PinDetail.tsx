@@ -95,8 +95,6 @@ const PinDetail = ({ user }: { user: UserProps }) => {
     fetchPinDetails();
   }, [pinId]);
 
-  // TODO: Make link more distinctive
-
   // 🗨️ Add comments handler 🗨️
   const addComment = () => {
     if (inputValue && pinId) {
@@ -176,13 +174,13 @@ const PinDetail = ({ user }: { user: UserProps }) => {
   // FIXME: Make sure the page is WCAG optimized
   // FIXME: I think the word destination is a bit misleading and confusing
   return (
-    <div className="flex flex-col gap-16 mx-auto mt-10 max-w-6xl lg:w-full mb-32">
+    <div className="flex flex-col gap-10 md:gap-16 mx-auto mt-10 max-w-6xl lg:w-full mb-32">
       {isPinDetailsLoading ? (
         <Spinner />
       ) : isPinDetailsError ? (
         <ErrorBox message="Unable to load pin details. Please try again later." />
       ) : (
-        <div className="flex flex-col xl:flex-row  gap-6 justify-center">
+        <div className="flex flex-col xl:flex-row gap-4 md:gap-6 justify-center">
           {/* Image */}
           <div className="flex flex-1 justify-center items-center md:items-start ">
             <img
@@ -195,59 +193,55 @@ const PinDetail = ({ user }: { user: UserProps }) => {
           </div>
 
           {/* Content container */}
-          <div className="flex flex-1 flex-col gap-10 p-5 bg-white  rounded-md">
+          <div className="flex flex-1 flex-col gap-10 p-2 md:p-5 bg-white  rounded-md">
             {/* Download and Link row */}
-            <div className="flex items-center justify-between">
-              <div className="flex gap-4 justify-between w-full items-start">
-                {/* Profile link */}
-                <UserProfileLink
-                  id={pinDetail?.postedBy?._id || ''}
-                  image={pinDetail?.postedBy?.image || ''}
-                  userName={
-                    <span className="flex flex-col">
-                      <span className="text-xs text-gray-600">
-                        Uploaded by{' '}
-                      </span>
-                      <span className="font-bold">
-                        {pinDetail?.postedBy?.userName}
-                      </span>
+            <div className="flex items-center flex-wrap gap-4 justify-between w-full">
+              {/* Profile link */}
+              <UserProfileLink
+                id={pinDetail?.postedBy?._id || ''}
+                image={pinDetail?.postedBy?.image || ''}
+                userName={
+                  <span className="flex flex-col">
+                    <span className="text-xs text-gray-600">Uploaded by </span>
+                    <span className="font-bold">
+                      {pinDetail?.postedBy?.userName}
                     </span>
-                  }
-                  classesLink="flex gap-2 items-center rounded-lg bg-gray-200 bg-opacity-80 hover:bg-opacity-100 focus:opacity-100 py-2 px-4 transition-all"
-                  classesImage="w-12 h-12 rounded-full object-cover"
-                  classesText="text-sm"
+                  </span>
+                }
+                classesLink="flex gap-2 items-center rounded-lg bg-gray-200 bg-opacity-80 hover:bg-opacity-100 focus:opacity-100 py-2 px-4 transition-all"
+                classesImage="w-12 h-12 rounded-full object-cover"
+                classesText="text-sm"
+              />
+              <div className="flex gap-4">
+                {pinDetail?.postedBy?._id === user?._id && (
+                  <DeleteButton
+                    screenReaderMessage={`Delete your "${pinDetail?.title}" image`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deletePin(pinDetail?.postedBy?._id || '');
+                    }}
+                  />
+                )}
+                <DownloadLink
+                  image={`${pinDetail?.image?.asset?.url}?dl=`}
+                  about={pinDetail?.about || ''}
+                  isPinDetailPage
                 />
-                <div className="flex gap-4">
-                  {pinDetail?.postedBy?._id === user?._id && (
-                    <DeleteButton
-                      screenReaderMessage={`Delete your "${pinDetail?.title}" image`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deletePin(pinDetail?.postedBy?._id || '');
-                      }}
-                    />
-                  )}
-                  <DownloadLink
-                    image={`${pinDetail?.image?.asset?.url}?dl=`}
-                    about={pinDetail?.about || ''}
-                    isPinDetailPage
-                  />
-                  <ExternalLink
-                    href={pinDetail?.destination || ''}
-                    title={`Open image origin of "${pinDetail?.title}"`}
-                  />
-                  <HeartIcon
-                    id={pinId || ''}
-                    saved={pinDetail?.saved || false}
-                    isPinDetailPage
-                  />
-                </div>
+                <ExternalLink
+                  href={pinDetail?.destination || ''}
+                  title={`Open image origin of "${pinDetail?.title}"`}
+                />
+                <HeartIcon
+                  id={pinId || ''}
+                  saved={pinDetail?.saved || false}
+                  isPinDetailPage
+                />
               </div>
             </div>
 
             {/* Title and Description */}
             <div className="flex gap-2 flex-col items-start">
-              <h1 className="text-4xl font-bold break-words">
+              <h1 className="text-3xl md:text-4xl font-bold break-words">
                 {pinDetail?.title}
               </h1>
               <p>{pinDetail?.about}</p>
@@ -270,8 +264,10 @@ const PinDetail = ({ user }: { user: UserProps }) => {
       )}
 
       {/* More like this  */}
-      <div className="rounded-md px-4 py-10">
-        <h2 className="text-center text-3xl mb-8">More images like this</h2>
+      <div className="rounded-md md:px-4 py-10">
+        <h2 className="text-center text-2xl md:text-3xl mb-8">
+          More images like this
+        </h2>
         <div aria-live="polite" className="flex flex-wrap">
           {isPinsLoading ? (
             <Spinner />

@@ -31,7 +31,7 @@ const Comments = ({
     <div className="flex flex-col h-full justify-between ">
       <div className="">
         {/* Headline */}
-        <h2 className="text-3xl">Comments</h2>
+        <h2 className="text-2xl md:text-3xl">Comments</h2>
 
         {/* Comments */}
         <ul className="">
@@ -68,11 +68,11 @@ const Comments = ({
       </div>
 
       {/* Create comments */}
-      <form className="flex flex-wrap mt-6 gap-3 w-full justify-center items-end">
+      <form className="flex mt-6 gap-3 w-full justify-center items-end">
         <img
           src={pinDetail?.postedBy?.image}
           alt=""
-          className="w-11 h-11 rounded-full"
+          className="w-11 h-11 rounded-full hidden sm:block"
         />
         <div className="flex flex-col flex-1">
           <label htmlFor="comment" className="ml-2 text-sm font-bold">
@@ -99,7 +99,7 @@ const Comments = ({
               e.preventDefault();
               addComment();
             }}
-            className="bg-salmon text-white rounded-md  py-2 font-semibold text-base h-11 w-20"
+            className="bg-salmon text-white rounded-md px-2 sm:px-0 py-2 font-semibold text-base h-11 sm:w-20"
           >
             Post
           </button>
