@@ -1,6 +1,7 @@
 export interface CommentsProps {
   postedBy: PostedByProps;
   comment: string;
+  _key: string;
 }
 
 export interface PinProps {
@@ -17,12 +18,15 @@ export interface PinProps {
 }
 
 export interface PostedByProps extends UserProps {
-  image: string;
+  image?: string;
 }
 export interface UserProps {
-  userName: string;
-  image: string;
-  _id: string;
+  userName?: string;
+  image?: string;
+  _id?: string;
+  _type?: string;
+  _ref?: string;
+  //sub: string;
 }
 
 export interface ImageProps {
