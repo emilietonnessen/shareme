@@ -1,41 +1,91 @@
-import { Link, useParams } from 'react-router-dom';
-import { MdDownloadForOffline } from 'react-icons/md';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import MasonryLayout from './MasonryLayout';
-import Spinner from './Spinner';
+import Comments from '../components/Comments';
+import DeleteButton from '../components/DeleteButton';
+import DownloadLink from '../components/DownloadLink';
+import ErrorBox from '../components/ErrorBox';
+import ExternalLink from '../components/ExternalLink';
+import HeartIcon from '../components/HeartIcon';
+import InfoBox from '../components/InfoBox';
+import MasonryLayout from '../components/MasonryLayout';
+import Spinner from '../components/Spinner';
+import UserProfileLink from '../components/UserProfileLink';
+import { CommentsProps, PinProps, UserProps } from '../utils/schemaTypes';
 import { client, urlFor } from '../client';
 import { pinDetailMorePinQuery, pinDetailQuery } from '../utils/data';
-import { PinProps, UserProps } from './../utils/schemaTypes';
 
 const PinDetail = ({ user }: { user: UserProps }) => {
-  // 🏡 Local state 🏡
-  const [pins, setPins] = useState<PinProps[] | null>(null);
+  // 🏡 Pin Details - State 🏡
   const [pinDetail, setPinDetail] = useState<PinProps | null>(null);
-  const [comment, setComment] = useState<string>('');
-  const [addingComment, setAddingComment] = useState<boolean>(false);
+  const [isPinDetailsLoading, setIsPinDetailsLoading] = useState(false);
+  const [isPinDetailsError, setIsPinDetailsError] = useState(false);
+
+  // 🏡 Comments - State 🏡
+  const [comments, setComments] = useState<CommentsProps[]>([]);
+
+  // 🏡 Adding Comments - state 🏡
+  const [inputValue, setInputValue] = useState('');
+  const [isAddingCommentLoading, setIsAddingCommentLoading] = useState(false);
+  const [isAddingCommentError, setIsAddingCommentError] = useState(false);
+
+  // 🏡 Deleting Comments - state 🏡
+  const [isDeletingCommentLoading, setIsDeletingCommentLoading] =
+    useState(false);
+  const [isDeletingCommentError, setIsDeletingCommentError] = useState(false);
+
+  // 🏡 More pins - State 🏡
+  const [pins, setPins] = useState<PinProps[] | null>(null);
+  const [isPinsLoading, setIsPinsLoading] = useState(false);
+  const [isErrorPins, setIsErrorPins] = useState(false);
 
   // 🎣 Hooks 🎣
   const { pinId } = useParams();
+  const navigate = useNavigate();
 
   // ✉️ Fetch pin details handler ✉️
   const fetchPinDetails = () => {
     if (pinId) {
+      setIsPinDetailsLoading(true);
+      setIsPinDetailsError(false);
       let query = pinDetailQuery(pinId);
 
       if (query) {
-        client.fetch(query).then((data) => {
-          setPinDetail(data[0]);
+        client
+          .fetch(query)
+          .then((data) => {
+            setPinDetail(data[0]);
 
-          if (data[0]) {
-            query = pinDetailMorePinQuery(data[0]);
+            // Fetch images from same category
+            if (data[0]) {
+              query = pinDetailMorePinQuery(data[0]);
+              setIsPinsLoading(true);
+              setIsErrorPins(false);
 
-            client.fetch(query).then((response) => {
-              setPins(response);
-            });
-          }
-        });
+              client
+                .fetch(query)
+                .then((response) => {
+                  setPins(response);
+                  setIsPinsLoading(false);
+                })
+                .catch(() => {
+                  setIsPinsLoading(false);
+                  setIsErrorPins(true);
+                });
+            }
+
+            // Set comments
+            if (data[0]?.comments) {
+              setComments(data[0]?.comments);
+            }
+
+            setIsPinDetailsLoading(false);
+          })
+          .catch(() => {
+            setIsPinDetailsLoading(false);
+            setIsPinDetailsError(true);
+          });
       }
     }
   };
@@ -45,160 +95,200 @@ const PinDetail = ({ user }: { user: UserProps }) => {
     fetchPinDetails();
   }, [pinId]);
 
+  // TODO: Make link more distinctive
+
   // 🗨️ Add comments handler 🗨️
-  // FIXME: You have to wait and reload multiple times to get the new comment. Same with when you add pins. Check how to fix this. Check if it has anything to do with Sanity. IF thats the case I could add an info box with info about this being a portfolio project and the loading of data is a bit slower than a normal page.
-  // TODO: Add possibility to delete comments
   const addComment = () => {
-    if (comment && pinId) {
-      setAddingComment(true);
+    if (inputValue && pinId) {
+      setIsAddingCommentLoading(true);
+      setIsAddingCommentError(false);
 
       client
         .patch(pinId)
         .setIfMissing({ comments: [] })
         .insert('after', 'comments[-1]', [
           {
-            comment,
+            comment: inputValue,
             _key: uuidv4(),
-            postedBy: { _type: 'postedBy', _ref: user._id },
+            postedBy: { _type: 'postedBy', _ref: user?._id },
           },
         ])
         .commit()
         .then(() => {
-          fetchPinDetails();
-          setComment('');
-          setAddingComment(false);
-          window.location.reload();
+          setInputValue('');
+          setIsAddingCommentLoading(false);
+          setComments([
+            ...comments,
+            {
+              comment: inputValue,
+              _key: uuidv4(),
+              postedBy: {
+                _type: 'postedBy',
+                _ref: user?._id,
+                userName: user?.userName,
+                image: user?.image,
+              },
+            },
+          ]);
+        })
+        .catch(() => {
+          setIsAddingCommentError(true);
+          setIsAddingCommentLoading(false);
         });
     }
   };
 
-  // Loading handler
-  // FIXME: Don't think this is the best method of doing this.
-  if (!pinDetail) {
-    return <Spinner message="Loading pin..." />;
-  }
+  // 🗑️ Delete Comment 🗑️
+  const deleteComment = (id: string) => {
+    setIsDeletingCommentLoading(true);
+    setIsDeletingCommentError(false);
+    // TODO: Add warning
+    client
+      .patch(pinDetail?._id || '')
+      .unset([`comments[_key=="${id}"]`])
+      .commit()
+      .then((data) => {
+        setIsDeletingCommentLoading(false);
+        setComments(data?.comments);
+        // TODO: Display success message
+      })
+      .catch(() => {
+        setIsDeletingCommentError(true);
+        setIsDeletingCommentLoading(false);
+      });
+  };
+
+  // 🗑️ Delete pin 🗑️
+  const deletePin = (id: string) => {
+    // TODO: add warning in case user miss clicked
+    client
+      .delete(id)
+      .then(() => {
+        navigate('/');
+        // 1: Navigate to home
+        // 2: Display success message
+      })
+      .catch(() => {
+        // 1: Display error message
+      });
+  };
 
   // FIXME: Make sure the page is WCAG optimized
   // FIXME: I think the word destination is a bit misleading and confusing
   return (
-    <>
-      <div
-        className="flex xl:flex-row flex-col m-auto bg-white"
-        style={{ maxWidth: '1500px', borderRadius: '32px' }}
-      >
-        {/* Image */}
-        <div className="flex justify-center items-center md:items-start flex-initial ">
-          <img
-            src={pinDetail?.image && urlFor(pinDetail.image).url()}
-            alt="user-post"
-            className="rounded-t-3xl rounded-b-lg"
-          />
-        </div>
-
-        <div className="w-full p-5 flex-1 xl:min-w-620">
-          {/* Download and Link row */}
-          <div className="flex items-center justify-between">
-            <div className="flex gap-2 items-center">
-              <a
-                href={`${pinDetail.image?.asset?.url}?dl=`}
-                download
-                onClick={(e) => e.stopPropagation()}
-                className="bg-white w-9 h-9 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none"
-              >
-                <MdDownloadForOffline />
-              </a>
-            </div>
-            <a href={pinDetail.destination} target="_blank" rel="noreferrer">
-              {pinDetail.destination}
-            </a>
-          </div>
-
-          {/* Title and Description */}
-          <div>
-            <h1 className="text-4xl font-bold break-words mt-3">
-              {pinDetail.title}
-            </h1>
-            <p className="mt-3">{pinDetail.about}</p>
-          </div>
-
-          {/* Profile link */}
-          {/* TODO: Make this its own component as its copied from Pin.tsx and on line 130*/}
-          <Link
-            to={`user-profile/${pinDetail.postedBy?._id}`}
-            className="flex gap-2 mt-5 items-center bg-white rounded-lg"
-          >
+    <div className="flex flex-col gap-16 mx-auto mt-10 max-w-6xl lg:w-full mb-32">
+      {isPinDetailsLoading ? (
+        <Spinner />
+      ) : isPinDetailsError ? (
+        <ErrorBox message="Unable to load pin details. Please try again later." />
+      ) : (
+        <div className="flex flex-col xl:flex-row  gap-6 justify-center">
+          {/* Image */}
+          <div className="flex flex-1 justify-center items-center md:items-start ">
             <img
-              src={pinDetail.postedBy?.image}
-              alt="user-profile"
-              className="w-8 h-8 rounded-full object-cover"
+              src={
+                pinDetail?.image && urlFor(pinDetail.image).width(1100).url()
+              }
+              alt={pinDetail?.about}
+              className=""
             />
-            <p className="font-semibold capitalize">
-              {pinDetail.postedBy?.userName}
-            </p>
-          </Link>
+          </div>
 
-          {/* Comments */}
-          <h2 className="mt-5 text-2xl">Comments</h2>
-          <div className="max-h-370 overflow-y-auto">
-            {pinDetail?.comments?.map((comment, i) => (
-              <div
-                key={i}
-                className="flex gap-2 mt-5 items-center bg-white rounded-lg"
-              >
-                <img
-                  src={comment.postedBy.image}
-                  alt="user-profile"
-                  className="w-10 h-10 rounded-full cursor-pointer"
+          {/* Content container */}
+          <div className="flex flex-1 flex-col gap-10 p-5 bg-white  rounded-md">
+            {/* Download and Link row */}
+            <div className="flex items-center justify-between">
+              <div className="flex gap-4 justify-between w-full items-start">
+                {/* Profile link */}
+                <UserProfileLink
+                  id={pinDetail?.postedBy?._id || ''}
+                  image={pinDetail?.postedBy?.image || ''}
+                  userName={
+                    <span className="flex flex-col">
+                      <span className="text-xs text-gray-600">
+                        Uploaded by{' '}
+                      </span>
+                      <span className="font-bold">
+                        {pinDetail?.postedBy?.userName}
+                      </span>
+                    </span>
+                  }
+                  classesLink="flex gap-2 items-center rounded-lg bg-gray-200 bg-opacity-80 hover:bg-opacity-100 focus:opacity-100 py-2 px-4 transition-all"
+                  classesImage="w-12 h-12 rounded-full object-cover"
+                  classesText="text-sm"
                 />
-                <div className="flex flex-col">
-                  <p className="font-bold">{comment.postedBy.userName}</p>
-                  <p>{comment.comment}</p>
+                <div className="flex gap-4">
+                  {pinDetail?.postedBy?._id === user?._id && (
+                    <DeleteButton
+                      screenReaderMessage={`Delete your "${pinDetail?.title}" image`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deletePin(pinDetail?.postedBy?._id || '');
+                      }}
+                    />
+                  )}
+                  <DownloadLink
+                    image={`${pinDetail?.image?.asset?.url}?dl=`}
+                    about={pinDetail?.about || ''}
+                    isPinDetailPage
+                  />
+                  <ExternalLink
+                    href={pinDetail?.destination || ''}
+                    title={`Open image origin of "${pinDetail?.title}"`}
+                  />
+                  <HeartIcon
+                    id={pinId || ''}
+                    saved={pinDetail?.saved || false}
+                    isPinDetailPage
+                  />
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
 
-          {/* Create comments */}
-          <div className="flex flex-wrap mt-6 gap-3">
-            <Link to={`user-profile/${pinDetail.postedBy?._id}`}>
-              <img
-                src={pinDetail.postedBy?.image}
-                alt="user-profile"
-                className="w-10 h-10 rounded-full cursor-pointer"
-              />
-            </Link>
-            <input
-              type="text"
-              name="comment"
-              id="comment"
-              placeholder="Add a comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              className="flex-1 border-gray-100 outline-none border-2 p-2 rounded-2xl focus:border-gray-300"
+            {/* Title and Description */}
+            <div className="flex gap-2 flex-col items-start">
+              <h1 className="text-4xl font-bold break-words">
+                {pinDetail?.title}
+              </h1>
+              <p>{pinDetail?.about}</p>
+            </div>
+
+            {/* Comments */}
+            <Comments
+              pinDetail={pinDetail}
+              comments={comments}
+              setInputValue={setInputValue}
+              addComment={addComment}
+              isAddingCommentLoading={isAddingCommentLoading}
+              inputValue={inputValue}
+              isAddingCommentError={isAddingCommentError}
+              deleteComment={deleteComment}
+              userId={user?._id || ''}
             />
-            <button
-              type="button"
-              onClick={addComment}
-              className="bg-red-500 text-white rounded-full px-6 py-2 font-semibold text-base outline-none"
-            >
-              {addingComment ? 'Posting the comment' : 'Post'}
-            </button>
           </div>
         </div>
-      </div>
-      {pins && pins?.length > 0 ? (
-        <>
-          <h2 className="text-center font-bold text-2xl mt-8 mb-4">
-            More like this
-          </h2>
-          {/* FIXME: What if there is a 1000 pins??? */}
-          <MasonryLayout pins={pins} />
-        </>
-      ) : (
-        /* FIXME: It will load forever if there is no other pins in the same category */
-        <Spinner message="Loading more pins..." />
       )}
-    </>
+
+      {/* More like this  */}
+      <div className="rounded-md px-4 py-10">
+        <h2 className="text-center text-3xl mb-8">More images like this</h2>
+        <div aria-live="polite" className="flex flex-wrap">
+          {isPinsLoading ? (
+            <Spinner />
+          ) : isErrorPins ? (
+            <div className="flex w-full justify-center">
+              <ErrorBox message="Not able to load images in the same category. Please try again later." />
+            </div>
+          ) : pins?.length ? (
+            <MasonryLayout pins={pins.slice(0, 15)} />
+          ) : (
+            <div className="flex w-full justify-center">
+              <InfoBox message="We could not find more images in the same category." />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
