@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import SearchBar from './SearchInput';
 import { UserProps } from './../utils/schemaTypes';
+import UserProfileLink from './UserProfileLink';
 
 interface NavbarProps {
   searchHandler: () => void;
@@ -21,9 +22,9 @@ const Navbar = ({
   user,
 }: NavbarProps) => {
   return (
-    <header className="flex flex-col ">
+    <header className="flex flex-col  w-full mx-auto">
       {/* Search bar */}
-      <div className="flex gap-2 md:gap-5 w-full mt-5 pb-7 p-2 md:p-5 md:flex-row  items-end flex-col-reverse">
+      <div className="flex gap-2 md:gap-5 w-full mt-5 pb-7 py-2 md:p-5 md:flex-row  items-end flex-col-reverse">
         {/* Search input */}
         <div className="w-full">
           <SearchBar
@@ -42,13 +43,12 @@ const Navbar = ({
           />
 
           <div className="flex gap-2">
-            <Link to={`user-profile/${user?._id}`} className="rounded-lg">
-              <img
-                src={user.image}
-                alt="user"
-                className="h-14 max-w-none rounded-lg"
-              />
-            </Link>
+            <UserProfileLink
+              image={user?.image || ''}
+              id={user?._id || ''}
+              classesLink="rounded-lg"
+              classesImage="h-14 max-w-none rounded-lg"
+            />
             <Link
               to="/create-pin"
               className="bg-black text-white rounded-lg w-14 h-14 flex justify-center items-center"
