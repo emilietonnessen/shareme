@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-import ErrorBox from './ErrorBox';
-import MasonryLayout from './MasonryLayout';
-import Spinner from './Spinner';
+import ErrorBox from '../components/ErrorBox';
+import MasonryLayout from '../components/MasonryLayout';
+import Spinner from '../components/Spinner';
 import { PinProps } from '../utils/schemaTypes';
 import { client } from '../client';
 import { feedQuery, searchQuery } from '../utils/data';

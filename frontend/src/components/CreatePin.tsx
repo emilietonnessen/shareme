@@ -5,9 +5,9 @@ import { useState } from 'react';
 
 import { categories } from '../utils/data';
 import { client } from '../client';
-import { UserProps } from './../utils/schemaTypes';
+import { UserProps } from '../utils/schemaTypes';
 import { SanityImageAssetDocument } from '@sanity/client';
-import Spinner from './Spinner';
+import Spinner from '../components/Spinner';
 
 const CreatePin = ({ user }: { user: UserProps }) => {
   // 🏡 Local state 🏡

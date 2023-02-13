@@ -6,7 +6,7 @@ import { useState } from 'react';
 import logo from '../assets/logowhite.png';
 import shareVideo from '../assets/share.mp4';
 import { client } from '../client';
-import Spinner from './Spinner';
+import Spinner from '../components/Spinner';
 
 interface DecodedProps {
   name: string;

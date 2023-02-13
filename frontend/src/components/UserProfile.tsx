@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import MasonryLayout from './MasonryLayout';
 import Spinner from './Spinner';
 import { client } from '../client';
-import { PinProps, UserProps } from './../utils/schemaTypes';
+import { PinProps, UserProps } from '../utils/schemaTypes';
 import {
   userCreatedPinsQuery,
   userQuery,
