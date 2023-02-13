@@ -104,13 +104,7 @@ export const pinDetailQuery = (pinId: string) => {
       userName,
       image
     },
-   save[]{
-      postedBy->{
-        _id,
-        userName,
-        image
-      },
-    },
+   saved,
     comments[]{
       comment,
       _key,
@@ -138,14 +132,7 @@ export const pinDetailMorePinQuery = (pin: PinProps) => {
       userName,
       image
     },
-    save[]{
-      _key,
-      postedBy->{
-        _id,
-        userName,
-        image
-      },
-    },
+    saved,
   }`;
   return query;
 };
