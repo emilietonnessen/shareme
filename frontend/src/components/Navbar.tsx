@@ -28,8 +28,6 @@ const Navbar = ({
     pathname === '/search' ||
     pathname.includes('/category/');
 
-  console.log(shouldNavbarBeFullWidth);
-
   return (
     <header
       className={`flex flex-col w-full ${
