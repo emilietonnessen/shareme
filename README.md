@@ -31,3 +31,4 @@ Link to course: https://www.youtube.com/watch?v=XxXyfkrP298&list=PL6QREj8te1P6wX
 - [ ] Made the code more fun with emojis :)
 - [ ] Add unit tests
 - [ ] Add integration or E2E tests
+- [ ] Fix saving to favorites functionality. Currently the save is being saved for all profiles
