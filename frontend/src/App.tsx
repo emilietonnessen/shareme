@@ -7,13 +7,17 @@ import Login from './container/Login';
 import { fetchUser } from './utils/fetchUser';
 
 function App() {
+  // 🎣 Hooks 🎣
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const user = fetchUser();
+  // 🦮 Fetch user 🦮
+  const user = fetchUser();
 
+  useEffect(() => {
+    // If the user is not logged in, then redirect to the login page
     if (!user) navigate('/login');
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <GoogleOAuthProvider
