@@ -29,3 +29,5 @@ Link to course: https://www.youtube.com/watch?v=XxXyfkrP298&list=PL6QREj8te1P6wX
 - [ ] Added info boxes
 - [x] Added TypeScript
 - [ ] Made the code more fun with emojis :)
+- [ ] Add unit tests
+- [ ] Add integration or E2E tests
