@@ -24,7 +24,11 @@ const Navbar = ({
   pathname,
 }: NavbarProps) => {
   const shouldNavbarBeFullWidth =
-    pathname === '/' || pathname.includes('/category/');
+    pathname === '/' ||
+    pathname === '/search' ||
+    pathname.includes('/category/');
+
+  console.log(shouldNavbarBeFullWidth);
 
   return (
     <header
