@@ -2,8 +2,8 @@ import { AiOutlineLogout } from 'react-icons/ai';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-import MasonryLayout from './MasonryLayout';
-import Spinner from './Spinner';
+import MasonryLayout from '../components/MasonryLayout';
+import Spinner from '../components/Spinner';
 import { client } from '../client';
 import { PinProps, UserProps } from '../utils/schemaTypes';
 import {

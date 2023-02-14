@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import Home from './container/Home';
-import Login from './components/Login';
+import Login from './container/Login';
 import { fetchUser } from './utils/fetchUser';
 
 function App() {

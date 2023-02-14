@@ -1,12 +1,12 @@
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
-import CreatePin from '../components/CreatePin';
-import Feed from '../components/Feed';
+import CreatePin from './CreatePin';
+import Feed from './Feed';
 import Navbar from '../components/Navbar';
-import PinDetail from '../components/PinDetail';
+import PinDetail from './PinDetail';
 import Search from '../components/Search';
-import UserProfile from '../components/UserProfile';
+import UserProfile from './UserProfile';
 import { PinProps, UserProps } from './../utils/schemaTypes';
 import { client } from '../client';
 import { feedQuery, searchQuery } from '../utils/data';
