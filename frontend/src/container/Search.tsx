@@ -1,5 +1,5 @@
-import MasonryLayout from './MasonryLayout';
-import Spinner from './Spinner';
+import MasonryLayout from '../components/MasonryLayout';
+import Spinner from '../components/Spinner';
 import { PinProps } from '../utils/schemaTypes';
 
 interface SearchProps {
@@ -11,6 +11,7 @@ interface SearchProps {
 const Search = ({ loading, pins, searchTerm }: SearchProps) => {
   return (
     <div>
+      <h1 className="text-3xl ml-2 mb-4">Search for images</h1>
       {/* Loader */}
       {loading && <Spinner message="Searching for pins" />}
 

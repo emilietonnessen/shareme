@@ -5,7 +5,7 @@ import CreatePin from './CreatePin';
 import Feed from './Feed';
 import Navbar from '../components/Navbar';
 import PinDetail from './PinDetail';
-import Search from '../components/Search';
+import Search from './Search';
 import UserProfile from './UserProfile';
 import { PinProps, UserProps } from './../utils/schemaTypes';
 import { client } from '../client';
