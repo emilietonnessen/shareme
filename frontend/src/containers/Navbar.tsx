@@ -47,11 +47,13 @@ const Navbar = ({
 
         {/* Hamburger menu + User profile + Create Pin */}
         <nav className="flex gap-3 justify-between w-full md:w-auto">
-          <HiMenu
-            fontSize={40}
-            className="cursor-pointer md:hidden"
-            onClick={() => setToggleSidebar(true)}
-          />
+          <span className="bg-salmon p-3 rounded-full shadow-lg md:hidden">
+            <HiMenu
+              fontSize={30}
+              className="cursor-pointer  text-white"
+              onClick={() => setToggleSidebar(true)}
+            />
+          </span>
 
           <div className="flex gap-2">
             <ProfileLink

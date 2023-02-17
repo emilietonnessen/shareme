@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
@@ -87,6 +89,10 @@ module.exports = {
     cursor: {
       'zoom-in': 'zoom-in',
       pointer: 'pointer',
+    },
+    screens: {
+      xs: '375px',
+      ...defaultTheme.screens,
     },
   },
   variants: {
