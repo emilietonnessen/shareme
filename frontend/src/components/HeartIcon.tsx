@@ -7,9 +7,10 @@ interface HeartIconProps {
   id: string;
   saved: boolean;
   isPinDetailPage?: boolean;
+  about: string;
 }
 
-const HeartIcon = ({ id, saved, isPinDetailPage }: HeartIconProps) => {
+const HeartIcon = ({ id, saved, isPinDetailPage, about }: HeartIconProps) => {
   // 🏡 Local state 🏡
   const [savingPin, setSavingPin] = useState(false);
   const [isSaved, setIsSaved] = useState(saved);
@@ -53,12 +54,13 @@ const HeartIcon = ({ id, saved, isPinDetailPage }: HeartIconProps) => {
             setIsSaved(false);
             addOrRemovePinFromFavorites(id, false);
           }}
+          aria-live="polite"
         >
           {savingPin ? (
             <>
               <SpinnerSmall />
 
-              <span className="sr-only">Removing pins from favorites</span>
+              <span className="sr-only">Loading</span>
             </>
           ) : (
             <>
@@ -66,7 +68,9 @@ const HeartIcon = ({ id, saved, isPinDetailPage }: HeartIconProps) => {
                 fontSize={isPinDetailPage ? 25 : 20}
                 className="text-salmon"
               />
-              <span className="sr-only">Remove pin from favorites</span>
+              <span className="sr-only">
+                Remove image of "{about}" from favorites
+              </span>
             </>
           )}
         </button>
@@ -81,11 +85,12 @@ const HeartIcon = ({ id, saved, isPinDetailPage }: HeartIconProps) => {
             addOrRemovePinFromFavorites(id, true);
             setIsSaved(true);
           }}
+          aria-live="polite"
         >
           {savingPin ? (
             <>
               <SpinnerSmall />
-              <span className="sr-only">Adding pin to favorites</span>
+              <span className="sr-only">Loading</span>
             </>
           ) : (
             <>
@@ -93,7 +98,9 @@ const HeartIcon = ({ id, saved, isPinDetailPage }: HeartIconProps) => {
                 fontSize={isPinDetailPage ? 25 : 20}
                 className="m-0"
               />
-              <span className="sr-only">Add pin to favorites</span>
+              <span className="sr-only">
+                Add image of "{about}" to favorites
+              </span>
             </>
           )}
         </button>
