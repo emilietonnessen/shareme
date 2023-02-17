@@ -1,24 +1,23 @@
-import { AiOutlineLogout } from 'react-icons/ai';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
 import MasonryLayout from '../components/MasonryLayout';
 import Spinner from '../components/Spinner';
-import { client } from '../client';
 import { PinProps, UserProps } from '../utils/schemaTypes';
+import { client } from '../client';
 import {
   userCreatedPinsQuery,
   userQuery,
   userSavedPinsQuery,
 } from '../utils/data';
+import InfoBox from '../components/InfoBox';
 
-const randomImage =
-  'https://source.unsplash.com/1600x900/?nature,photography,technology';
+const randomImage = 'https://source.unsplash.com/1600x900/?nature';
 
 const activeBtnStyles =
-  'bg-red-500 text-white font-bold p-2 rounded-full w-20 outline-none';
+  'bg-salmon text-white font-bold p-2 rounded-md w-20 outline-none';
 const notActiveBtnStyles =
-  'bg-primary mr-4 text-black font-bold p-2 rounded-full w-20 outline-none';
+  'bg-primary mr-4 text-black font-bold p-2 rounded-md w-20 outline-none';
 
 const UserProfile = () => {
   // 🏡 Local state 🏡
@@ -28,7 +27,6 @@ const UserProfile = () => {
   const [activeBtn, setActiveBtn] = useState<string>('created');
 
   // 🎣 Hooks 🎣
-  const navigate = useNavigate();
   const { userId } = useParams();
 
   // Fetch user data
@@ -61,14 +59,6 @@ const UserProfile = () => {
     }
   }, [text, userId]);
 
-  /* Redirect user if they logout or lose session to google? */
-  // Google doesn't have a way to logout. You must do that on the frontend side. We are currently storing the google session in local storage. So we should clear that when logging out
-  // Not sure what to do with this function below this comment yet lol. Don't think we need it. Just keeping it here in case, but should be removed if not necessary
-  const logout = () => {
-    localStorage.clear();
-    navigate('/login');
-  };
-
   if (!user) {
     return <Spinner message="Loading profile..." />;
   }
@@ -76,12 +66,12 @@ const UserProfile = () => {
   return (
     <div className="relative pb-2 h-full justify-center items-center max-w-6xl mx-auto">
       <div className="flex flex-col pb-5">
-        <div className="relative flex flex-col mb-7 gap-4">
+        <div className="relative flex flex-col mb-7 gap-4 bg-white rounded-md">
           <div className="flex flex-col justify-center items-center">
             <img
               src={randomImage}
               alt="banner"
-              className=" w-full h-370 2xl:h-510 shadow-lg object-cover"
+              className=" w-full h-370 2xl:h-510 shadow-lg object-cover rounded-t-md"
             />
             <img
               src={user?.image}
@@ -91,17 +81,6 @@ const UserProfile = () => {
             <h1 className="font-bold text-3xl text-center mt-3">
               {user?.userName}
             </h1>
-            <div className="absolute top-0 z-1 right-0 p-2">
-              {userId === user?._id && (
-                <button
-                  type="button"
-                  onClick={logout}
-                  className="bg-white p-2 rounded-full cursor-pointer outline-none shadow-md"
-                >
-                  <AiOutlineLogout color="red" fontSize={21} />
-                </button>
-              )}
-            </div>
           </div>
           <div className="text-center mb-7">
             <button
@@ -129,15 +108,17 @@ const UserProfile = () => {
               Saved
             </button>
           </div>
-          {pins?.length ? (
-            <div className="sm:px-2">
-              <MasonryLayout pins={pins} />
-            </div>
-          ) : (
-            <div className="flex justify-center font-bold items-center w-full text-xl mt-2">
-              No Pins found
-            </div>
-          )}
+          <div className="mb-10">
+            {pins?.length ? (
+              <div className="sm:px-2">
+                <MasonryLayout pins={pins} />
+              </div>
+            ) : (
+              <div className="flex justify-center font-bold items-center w-full text-xl mt-2">
+                <InfoBox message="No images found. Try saving some!" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
