@@ -62,7 +62,7 @@ const Login = () => {
         <div className="absolute flex flex-col justify-center items-center top-0 right-0 left-0 bottom-0 bg-blackOverlay">
           {/* Logo */}
           <div className="p-5">
-            <img src={logo} alt="shareme logo" width="130px" />
+            <img src={logo} alt="share me logo" width="130px" />
           </div>
 
           {/* Google Login */}
