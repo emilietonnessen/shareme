@@ -25,13 +25,13 @@ const Pin = ({ pin: { image, _id, about, saved } }: { pin: PinProps }) => {
             alt=""
             className="rounded-lg w-full"
           />
-          <span className="sr-only">See the pin details of {about}</span>
+          <span className="sr-only">See the image details of {about}</span>
         </Link>
 
         {/* ⬇️ Download icon ⬇️ */}
         <DownloadLink image={`${image?.asset?.url}?dl=`} about={about} />
 
-        <HeartIcon id={_id} saved={saved} />
+        <HeartIcon id={_id} saved={saved} about={about} />
       </div>
 
       {/* 🧑 User link 🧑 */}
