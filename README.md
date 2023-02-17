@@ -27,8 +27,10 @@ Link to course: https://www.youtube.com/watch?v=XxXyfkrP298&list=PL6QREj8te1P6wX
 - [ ] Tweaked on the design to give it more space and elegancy
 - [ ] Added loading and error handling
 - [ ] Added info boxes
+- [ ] Add success messages
 - [x] Added TypeScript
 - [ ] Made the code more fun with emojis :)
 - [ ] Add unit tests
 - [ ] Add integration or E2E tests
 - [ ] Fix saving to favorites functionality. Currently the save is being saved for all profiles
+- [ ] Add validation to form
