@@ -1,5 +1,4 @@
 import DeleteButton from './DeleteButton';
-import ErrorBox from './ErrorBox';
 import SpinnerSmall from './SpinnerSmall';
 import UserProfileLink from './UserProfileLink';
 import { CommentsProps, PinProps } from '../utils/schemaTypes';
@@ -10,10 +9,10 @@ interface CommentsComponentProps {
   addComment: () => void;
   isAddingCommentLoading: boolean;
   inputValue: string;
-  isAddingCommentError: boolean;
   deleteComment: any;
   userId: string;
   comments: CommentsProps[];
+  isDeletingCommentLoading: boolean;
 }
 
 const Comments = ({
@@ -22,10 +21,10 @@ const Comments = ({
   addComment,
   isAddingCommentLoading,
   inputValue,
-  isAddingCommentError,
   deleteComment,
   userId,
   comments,
+  isDeletingCommentLoading,
 }: CommentsComponentProps) => {
   return (
     <div className="flex flex-col h-full justify-between ">
@@ -56,6 +55,7 @@ const Comments = ({
               {pinDetail?.postedBy?._id === userId && (
                 <DeleteButton
                   screenReaderMessage={`Delete your "${comment?.comment}" comment`}
+                  loading={isDeletingCommentLoading}
                   onClick={(e) => {
                     e.stopPropagation();
                     deleteComment(comment?._key || '');
@@ -103,9 +103,6 @@ const Comments = ({
           >
             Post
           </button>
-        )}
-        {isAddingCommentError && (
-          <ErrorBox message="Unable to save comment. Please try again later." />
         )}
       </form>
     </div>
