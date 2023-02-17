@@ -21,41 +21,49 @@ const CreatePin = ({ user }: { user: UserProps }) => {
     null
   );
   const [wrongImageType, setWrongImageType] = useState<boolean>(false);
+  const [wrongImageSize, setWrongImageSize] = useState(false);
 
   // 🎣 Hooks 🎣
   const navigate = useNavigate();
 
   // ⬆️📸 Upload image handler ⬆️📸
   const uploadImage = (e: any) => {
-    const { type, name } = e.target.files[0];
+    const { type, name, size } = e.target.files[0];
     setWrongImageType(false);
+    setWrongImageSize(false);
 
-    // TODO: Add max 20MB file size
-    if (
+    const isImageTypeCorrect =
       type === 'image/png' ||
       type === 'image/svg' ||
       type === 'image/jpeg' ||
       type === 'image/gif' ||
-      type === 'image/tiff'
-    ) {
-      setWrongImageType(false);
-      setLoading(true);
+      type === 'image/tiff';
 
-      client.assets
-        .upload('image', e.target.files[0], {
-          contentType: type,
-          filename: name,
-        })
-        .then((document) => {
-          setImageAsset(document);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error('Image upload error', error);
-        });
+    const isImageSizeCorrect = size <= 2000000;
+
+    // TODO: Add max 20MB file size
+    if (isImageTypeCorrect) {
+      if (isImageSizeCorrect) {
+        setWrongImageType(false);
+        setLoading(true);
+
+        client.assets
+          .upload('image', e.target.files[0], {
+            contentType: type,
+            filename: name,
+          })
+          .then((document) => {
+            setImageAsset(document);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error('Image upload error', error);
+          });
+      } else {
+        setWrongImageSize(true);
+      }
     } else {
       setWrongImageType(true);
-      console.log(type);
     }
   };
 
@@ -104,7 +112,14 @@ const CreatePin = ({ user }: { user: UserProps }) => {
         <div className="bg-secondaryColor p-3 flex flex-0.7 w-full">
           <div className="flex justify-center items-center flex-col border-2 border-dotted border-gray-300 p-3 w-full h-420">
             {loading && <Spinner />}
-            {wrongImageType && <p>Wrong image type</p>}
+            {wrongImageType && (
+              <p>
+                Wrong image type. Please use either png, svg, jpeg, gif or tiff
+              </p>
+            )}
+            {wrongImageSize && (
+              <p>Wrong image size. Please use an image under 20MB</p>
+            )}
             {!imageAsset ? (
               <label>
                 <div className="flex flex-col items-center justify-center h-full">
@@ -114,8 +129,8 @@ const CreatePin = ({ user }: { user: UserProps }) => {
                     </p>
                     <p className="text-lg">Click to upload</p>
                   </div>
-                  <p className="mt-32 text-gray-400">
-                    Use high-quality JPG, SVG, PNG, GIF less than 20MB
+                  <p className="mt-32 text-gray-400 text-center">
+                    Use high-quality JPEG, SVG, PNG, GIF or TIFF less than 2MB
                   </p>
                 </div>
                 <input
