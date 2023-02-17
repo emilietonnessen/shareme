@@ -93,6 +93,7 @@ const PinDetail = ({ user }: { user: UserProps }) => {
   // Fetch pin details every time pinId changes
   useEffect(() => {
     fetchPinDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pinId]);
 
   // 🗨️ Add comments handler 🗨️
@@ -178,7 +179,9 @@ const PinDetail = ({ user }: { user: UserProps }) => {
       {isPinDetailsLoading ? (
         <Spinner />
       ) : isPinDetailsError ? (
-        <ErrorBox message="Unable to load pin details. Please try again later." />
+        <div className="flex justify-center items-center">
+          <ErrorBox message="Unable to load image details. Please try again later." />
+        </div>
       ) : (
         <div className="flex flex-col xl:flex-row gap-4 md:gap-6 justify-center">
           {/* Image */}
@@ -216,6 +219,7 @@ const PinDetail = ({ user }: { user: UserProps }) => {
                 {pinDetail?.postedBy?._id === user?._id && (
                   <DeleteButton
                     screenReaderMessage={`Delete your "${pinDetail?.title}" image`}
+                    loading={isDeletingCommentLoading}
                     onClick={(e) => {
                       e.stopPropagation();
                       deletePin(pinDetail?.postedBy?._id || '');
@@ -235,6 +239,7 @@ const PinDetail = ({ user }: { user: UserProps }) => {
                   id={pinId || ''}
                   saved={pinDetail?.saved || false}
                   isPinDetailPage
+                  about={pinDetail?.about || ''}
                 />
               </div>
             </div>
@@ -247,6 +252,14 @@ const PinDetail = ({ user }: { user: UserProps }) => {
               <p>{pinDetail?.about}</p>
             </div>
 
+            {isDeletingCommentError && (
+              <ErrorBox message="We had some trouble deleting your comment. Please try again later." />
+            )}
+
+            {isAddingCommentError && (
+              <ErrorBox message="We had some trouble saving your comment. Please try again later." />
+            )}
+
             {/* Comments */}
             <Comments
               pinDetail={pinDetail}
@@ -255,9 +268,9 @@ const PinDetail = ({ user }: { user: UserProps }) => {
               addComment={addComment}
               isAddingCommentLoading={isAddingCommentLoading}
               inputValue={inputValue}
-              isAddingCommentError={isAddingCommentError}
               deleteComment={deleteComment}
               userId={user?._id || ''}
+              isDeletingCommentLoading={isDeletingCommentLoading}
             />
           </div>
         </div>
