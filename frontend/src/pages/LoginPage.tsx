@@ -6,7 +6,7 @@ import { useState } from 'react';
 import logo from '../assets/logowhite.png';
 import shareVideo from '../assets/share.mp4';
 import { client } from '../client';
-import Spinner from '../components/Spinner';
+import Spinner from '../components/Spinners/Spinner';
 
 interface DecodedProps {
   name: string;
@@ -14,7 +14,7 @@ interface DecodedProps {
   sub: string;
 }
 
-const Login = () => {
+const LoginPage = () => {
   // 🏡 Local state 🏡
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -82,4 +82,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TiHeart, TiHeartOutline } from 'react-icons/ti';
-import { client } from '../client';
-import SpinnerSmall from './SpinnerSmall';
+import { client } from '../../client';
+import SpinnerSmall from '../Spinners/SpinnerSmall';
 
 interface HeartIconProps {
   id: string;
@@ -10,7 +10,7 @@ interface HeartIconProps {
   about: string;
 }
 
-const HeartIcon = ({ id, saved, isPinDetailPage, about }: HeartIconProps) => {
+const SaveButton = ({ id, saved, isPinDetailPage, about }: HeartIconProps) => {
   // 🏡 Local state 🏡
   const [savingPin, setSavingPin] = useState(false);
   const [isSaved, setIsSaved] = useState(saved);
@@ -109,4 +109,4 @@ const HeartIcon = ({ id, saved, isPinDetailPage, about }: HeartIconProps) => {
   );
 };
 
-export default HeartIcon;
+export default SaveButton;

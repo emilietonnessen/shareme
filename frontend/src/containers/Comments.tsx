@@ -1,6 +1,6 @@
-import DeleteButton from './DeleteButton';
-import SpinnerSmall from './SpinnerSmall';
-import UserProfileLink from './UserProfileLink';
+import DeleteButton from '../components/Buttons/DeleteButton';
+import SpinnerSmall from '../components/Spinners/SpinnerSmall';
+import ProfileLink from '../components/Links/ProfileLink';
 import { CommentsProps, PinProps } from '../utils/schemaTypes';
 
 interface CommentsComponentProps {
@@ -39,7 +39,7 @@ const Comments = ({
               key={i}
               className="flex gap-2 justify-between mt-5 items-center bg-gray-100 p-4 rounded-lg"
             >
-              <UserProfileLink
+              <ProfileLink
                 id={comment?.postedBy?._id || ''}
                 image={comment?.postedBy?.image || ''}
                 classesLink="flex"

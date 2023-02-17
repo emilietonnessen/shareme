@@ -10,7 +10,7 @@ interface UserProfileLinkProps {
   classesText?: string;
 }
 
-const UserProfileLink = ({
+const ProfileLink = ({
   id,
   image,
   userName,
@@ -26,4 +26,4 @@ const UserProfileLink = ({
   );
 };
 
-export default UserProfileLink;
+export default ProfileLink;

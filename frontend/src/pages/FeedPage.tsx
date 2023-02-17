@@ -1,14 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-import ErrorBox from '../components/ErrorBox';
-import MasonryLayout from '../components/MasonryLayout';
-import Spinner from '../components/Spinner';
+import ErrorBox from '../components/NoticeBoxes/ErrorBox';
+import MasonryLayout from '../containers/MasonryLayout';
+import Spinner from '../components/Spinners/Spinner';
 import { PinProps } from '../utils/schemaTypes';
 import { client } from '../client';
 import { feedQuery, searchQuery } from '../utils/data';
 
-const Feed = () => {
+const FeedPage = () => {
   // 🏡 Local state 🏡
   const [loading, setLoading] = useState<boolean>(false);
   const [pins, setPins] = useState<PinProps[]>([]);
@@ -72,4 +72,4 @@ const Feed = () => {
   );
 };
 
-export default Feed;
+export default FeedPage;

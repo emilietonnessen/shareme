@@ -7,9 +7,9 @@ import { categories } from '../utils/data';
 import { client } from '../client';
 import { UserProps } from '../utils/schemaTypes';
 import { SanityImageAssetDocument } from '@sanity/client';
-import Spinner from '../components/Spinner';
+import Spinner from '../components/Spinners/Spinner';
 
-const CreatePin = ({ user }: { user: UserProps }) => {
+const UploadPinPage = ({ user }: { user: UserProps }) => {
   // 🏡 Local state 🏡
   const [title, setTitle] = useState<string>('');
   const [about, setAbout] = useState<string>('');
@@ -221,4 +221,4 @@ const CreatePin = ({ user }: { user: UserProps }) => {
   );
 };
 
-export default CreatePin;
+export default UploadPinPage;

@@ -1,5 +1,5 @@
-import MasonryLayout from '../components/MasonryLayout';
-import Spinner from '../components/Spinner';
+import MasonryLayout from '../containers/MasonryLayout';
+import Spinner from '../components/Spinners/Spinner';
 import { PinProps } from '../utils/schemaTypes';
 
 interface SearchProps {
@@ -8,7 +8,7 @@ interface SearchProps {
   searchTerm: string;
 }
 
-const Search = ({ loading, pins, searchTerm }: SearchProps) => {
+const SearchPage = ({ loading, pins, searchTerm }: SearchProps) => {
   return (
     <div>
       <h1 className="text-3xl ml-2 mb-4">Search for images</h1>
@@ -26,4 +26,4 @@ const Search = ({ loading, pins, searchTerm }: SearchProps) => {
   );
 };
 
-export default Search;
+export default SearchPage;

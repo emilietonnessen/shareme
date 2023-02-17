@@ -2,21 +2,21 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import Comments from '../components/Comments';
-import DeleteButton from '../components/DeleteButton';
-import DownloadLink from '../components/DownloadLink';
-import ErrorBox from '../components/ErrorBox';
-import ExternalLink from '../components/ExternalLink';
-import HeartIcon from '../components/HeartIcon';
-import InfoBox from '../components/InfoBox';
-import MasonryLayout from '../components/MasonryLayout';
-import Spinner from '../components/Spinner';
-import UserProfileLink from '../components/UserProfileLink';
+import Comments from '../containers/Comments';
+import DeleteButton from '../components/Buttons/DeleteButton';
+import DownloadLink from '../components/Links/DownloadLink';
+import ErrorBox from '../components/NoticeBoxes/ErrorBox';
+import ExternalLink from '../components/Links/ExternalLink';
+import InfoBox from '../components/NoticeBoxes/InfoBox';
+import MasonryLayout from '../containers/MasonryLayout';
+import SaveButton from '../components/Buttons/SaveButton';
+import Spinner from '../components/Spinners/Spinner';
+import ProfileLink from '../components/Links/ProfileLink';
 import { CommentsProps, PinProps, UserProps } from '../utils/schemaTypes';
 import { client, urlFor } from '../client';
 import { pinDetailMorePinQuery, pinDetailQuery } from '../utils/data';
 
-const PinDetail = ({ user }: { user: UserProps }) => {
+const PinDetailsPage = ({ user }: { user: UserProps }) => {
   // 🏡 Pin Details - State 🏡
   const [pinDetail, setPinDetail] = useState<PinProps | null>(null);
   const [isPinDetailsLoading, setIsPinDetailsLoading] = useState(false);
@@ -200,7 +200,7 @@ const PinDetail = ({ user }: { user: UserProps }) => {
             {/* Download and Link row */}
             <div className="flex items-center flex-wrap gap-4 justify-between w-full">
               {/* Profile link */}
-              <UserProfileLink
+              <ProfileLink
                 id={pinDetail?.postedBy?._id || ''}
                 image={pinDetail?.postedBy?.image || ''}
                 userName={
@@ -235,7 +235,7 @@ const PinDetail = ({ user }: { user: UserProps }) => {
                   href={pinDetail?.destination || ''}
                   title={`Open image origin of "${pinDetail?.title}"`}
                 />
-                <HeartIcon
+                <SaveButton
                   id={pinId || ''}
                   saved={pinDetail?.saved || false}
                   isPinDetailPage
@@ -301,4 +301,4 @@ const PinDetail = ({ user }: { user: UserProps }) => {
   );
 };
 
-export default PinDetail;
+export default PinDetailsPage;

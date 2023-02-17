@@ -1,5 +1,5 @@
 import { FaTrashAlt } from 'react-icons/fa';
-import SpinnerSmall from './SpinnerSmall';
+import SpinnerSmall from '../Spinners/SpinnerSmall';
 
 interface DeleteButtonProps {
   onClick: (e: any) => void;

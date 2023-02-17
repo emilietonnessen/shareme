@@ -2,8 +2,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
-import Home from './container/Home';
-import Login from './container/Login';
+import Layout from './Layout/Layout';
+import LoginPage from './pages/LoginPage';
 import { fetchUser } from './utils/fetchUser';
 
 function App() {
@@ -24,8 +24,8 @@ function App() {
       clientId={process.env.REACT_APP_GOOGLE_API_TOKEN || ''}
     >
       <Routes>
-        <Route path="login" element={<Login />} />
-        <Route path="/*" element={<Home />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="/*" element={<Layout />} />
       </Routes>
     </GoogleOAuthProvider>
   );

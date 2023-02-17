@@ -2,9 +2,9 @@ import { HiMenu } from 'react-icons/hi';
 import { IoMdAdd } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
-import SearchBar from './SearchInput';
-import { UserProps } from './../utils/schemaTypes';
-import UserProfileLink from './UserProfileLink';
+import SearchBar from '../components/Inputs/SearchInput';
+import { UserProps } from '../utils/schemaTypes';
+import ProfileLink from '../components/Links/ProfileLink';
 
 interface NavbarProps {
   searchHandler: () => void;
@@ -54,7 +54,7 @@ const Navbar = ({
           />
 
           <div className="flex gap-2">
-            <UserProfileLink
+            <ProfileLink
               image={user?.image || ''}
               id={user?._id || ''}
               classesLink="rounded-lg"

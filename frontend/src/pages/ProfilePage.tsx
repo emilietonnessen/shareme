@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-import MasonryLayout from '../components/MasonryLayout';
-import Spinner from '../components/Spinner';
+import MasonryLayout from '../containers/MasonryLayout';
+import Spinner from '../components/Spinners/Spinner';
 import { PinProps, UserProps } from '../utils/schemaTypes';
 import { client } from '../client';
 import {
@@ -10,7 +10,7 @@ import {
   userQuery,
   userSavedPinsQuery,
 } from '../utils/data';
-import InfoBox from '../components/InfoBox';
+import InfoBox from '../components/NoticeBoxes/InfoBox';
 
 const randomImage = 'https://source.unsplash.com/1600x900/?nature';
 
@@ -19,7 +19,7 @@ const activeBtnStyles =
 const notActiveBtnStyles =
   'bg-primary mr-4 text-black font-bold p-2 rounded-md w-20 outline-none';
 
-const UserProfile = () => {
+const ProfilePage = () => {
   // 🏡 Local state 🏡
   const [user, setUser] = useState<UserProps | null>(null);
   const [pins, setPins] = useState<PinProps[]>([]);
@@ -125,4 +125,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default ProfilePage;

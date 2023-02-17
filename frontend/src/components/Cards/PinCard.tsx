@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 
-import DownloadLink from './DownloadLink';
-import HeartIcon from './HeartIcon';
-import { PinProps } from '../utils/schemaTypes';
-import { fetchUser } from '../utils/fetchUser';
-import { urlFor } from '../client';
-import UserProfileLink from './UserProfileLink';
+import DownloadLink from '../Links/DownloadLink';
+import HeartIcon from '../Buttons/SaveButton';
+import UserProfileLink from '../Links/ProfileLink';
+import { PinProps } from '../../utils/schemaTypes';
+import { fetchUser } from '../../utils/fetchUser';
+import { urlFor } from '../../client';
 
-const Pin = ({ pin: { image, _id, about, saved } }: { pin: PinProps }) => {
+const PinCard = ({ pin: { image, _id, about, saved } }: { pin: PinProps }) => {
   // 🦮 Fetch user data from local storage 🦮
   const user = fetchUser();
 
@@ -53,4 +53,4 @@ const Pin = ({ pin: { image, _id, about, saved } }: { pin: PinProps }) => {
   );
 };
 
-export default Pin;
+export default PinCard;
