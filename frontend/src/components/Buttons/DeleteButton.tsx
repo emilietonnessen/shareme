@@ -1,16 +1,17 @@
 import { FaTrashAlt } from 'react-icons/fa';
+
 import SpinnerSmall from '../Spinners/SpinnerSmall';
 
 interface DeleteButtonProps {
+  loading: boolean;
   onClick: (e: any) => void;
   screenReaderMessage: string;
-  loading: boolean;
 }
 
 const DeleteButton = ({
+  loading,
   onClick,
   screenReaderMessage,
-  loading,
 }: DeleteButtonProps) => {
   return (
     <button
