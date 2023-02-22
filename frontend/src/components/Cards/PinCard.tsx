@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import DownloadLink from '../Links/DownloadLink';
-import HeartIcon from '../Buttons/SaveButton';
+import HearthButton from '../Buttons/HearthButton';
 import UserProfileLink from '../Links/ProfileLink';
 import { PinProps } from '../../utils/schemaTypes';
 import { fetchUser } from '../../utils/fetchUser';
@@ -17,7 +17,7 @@ const PinCard = ({ pin: { image, _id, about, saved } }: { pin: PinProps }) => {
         {/* 📸 Image link to pin details 📸 */}
         <Link
           to={`/pin-detail/${_id}`}
-          className="relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden transition-all duration-500 ease-in-out "
+          className="relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden  "
           itemProp="contentUrl"
         >
           <img
@@ -31,7 +31,7 @@ const PinCard = ({ pin: { image, _id, about, saved } }: { pin: PinProps }) => {
         {/* ⬇️ Download icon ⬇️ */}
         <DownloadLink image={`${image?.asset?.url}?dl=`} about={about} />
 
-        <HeartIcon id={_id} saved={saved} about={about} />
+        <HearthButton id={_id} saved={saved} about={about} />
       </div>
 
       {/* 🧑 User link 🧑 */}

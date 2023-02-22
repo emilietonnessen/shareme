@@ -7,11 +7,11 @@ import DeleteButton from '../components/Buttons/DeleteButton';
 import DownloadLink from '../components/Links/DownloadLink';
 import ErrorBox from '../components/NoticeBoxes/ErrorBox';
 import ExternalLink from '../components/Links/ExternalLink';
+import HearthButton from '../components/Buttons/HearthButton';
 import InfoBox from '../components/NoticeBoxes/InfoBox';
 import MasonryLayout from '../containers/MasonryLayout';
-import SaveButton from '../components/Buttons/SaveButton';
-import Spinner from '../components/Spinners/Spinner';
 import ProfileLink from '../components/Links/ProfileLink';
+import Spinner from '../components/Spinners/Spinner';
 import { CommentsProps, PinProps, UserProps } from '../utils/schemaTypes';
 import { client, urlFor } from '../client';
 import { pinDetailMorePinQuery, pinDetailQuery } from '../utils/data';
@@ -235,7 +235,7 @@ const PinDetailsPage = ({ user }: { user: UserProps }) => {
                   href={pinDetail?.destination || ''}
                   title={`Open image origin of "${pinDetail?.title}"`}
                 />
-                <SaveButton
+                <HearthButton
                   id={pinId || ''}
                   saved={pinDetail?.saved || false}
                   isPinDetailPage
