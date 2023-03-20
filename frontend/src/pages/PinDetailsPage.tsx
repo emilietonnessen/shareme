@@ -15,6 +15,7 @@ import Spinner from '../components/Spinners/Spinner';
 import { CommentsProps, PinProps, UserProps } from '../utils/schemaTypes';
 import { client, urlFor } from '../client';
 import { pinDetailMorePinQuery, pinDetailQuery } from '../utils/data';
+import { addOrRemovePinFromFavorites } from '../utils/pins';
 
 const PinDetailsPage = ({ user }: { user: UserProps }) => {
   // 🏡 Pin Details - State 🏡
@@ -172,6 +173,30 @@ const PinDetailsPage = ({ user }: { user: UserProps }) => {
       });
   };
 
+  // 🏡 Local state 🏡
+  const [savingPin, setSavingPin] = useState(false);
+  const [isSaved, setIsSaved] = useState(pinDetail?.saved);
+
+  // Save pin
+  /* const addOrRemovePinFromFavorites = (id: string, addPin: boolean) => {
+    setSavingPin(true);
+
+    client
+      .patch(id, {
+        set: {
+          saved: addPin,
+        },
+      })
+      .commit()
+      .then((data) => {
+        setIsSaved(data?.saved);
+        setSavingPin(false);
+      })
+      .catch(() => {
+        setIsSaved(false);
+      });
+  }; */
+
   // FIXME: Make sure the page is WCAG optimized
   // FIXME: I think the word destination is a bit misleading and confusing
   return (
@@ -237,9 +262,13 @@ const PinDetailsPage = ({ user }: { user: UserProps }) => {
                 />
                 <HearthButton
                   id={pinId || ''}
-                  saved={pinDetail?.saved || false}
-                  isPinDetailPage
-                  about={pinDetail?.about || ''}
+                  description={pinDetail?.about || ''}
+                  classes="text-salmon hover:bg-gray-200 w-14 h-14 flex justify-center items-center"
+                  onClick={addOrRemovePinFromFavorites}
+                  iconSize={25}
+                  loading={savingPin}
+                  isSaved={isSaved || false}
+                  setIsSaved={setIsSaved}
                 />
               </div>
             </div>

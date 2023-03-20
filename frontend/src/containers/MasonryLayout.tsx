@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import Masonry from 'react-masonry-css';
-import { PinProps } from '../utils/schemaTypes';
 
 import PinCard from '../components/Cards/PinCard';
+import { PinProps } from '../utils/schemaTypes';
 
 const breakpointObj = {
   default: 4, // default numbers of columns,
@@ -12,11 +13,38 @@ const breakpointObj = {
   500: 1, // On 500px show 1 columns
 };
 
-const MasonryLayout = ({ pins }: { pins: PinProps[] }) => {
+interface MasonryLayoutProps {
+  pins: PinProps[];
+}
+
+// TODO: Control the "favorites" state here?
+/* 
+  user: {
+    userName: "Emilie",
+    image: "www.tonnessen.com/image.jpg"
+    savedPins: ["123456789"]
+  }
+
+*/
+const MasonryLayout = ({ pins }: MasonryLayoutProps) => {
+  // 🏡 Local state 🏡
+  const [savingPin, setSavingPin] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+
+  const saveRemovePin = (pinId: string) => {
+    // Call client and save or remove the pin from the savedPin array you can find in the user object
+  };
+
   return (
     <Masonry className="flex animate-slide-fwd" breakpointCols={breakpointObj}>
       {pins?.map((pin) => (
-        <PinCard key={pin._id} pin={pin} />
+        <PinCard
+          key={pin._id}
+          pin={pin}
+          savingPin={savingPin}
+          isSaved={pin.saved}
+          setIsSaved={setIsSaved}
+        />
       ))}
     </Masonry>
   );

@@ -13,5 +13,15 @@ export default {
       title: 'Image',
       type: 'string',
     },
+    {
+      name: 'savedPins',
+      title: 'Saved Pins',
+      type: 'array',
+      of: [
+        {
+          type: 'string',
+        },
+      ],
+    },
   ],
 }

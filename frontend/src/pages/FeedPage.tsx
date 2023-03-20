@@ -13,6 +13,8 @@ const FeedPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [pins, setPins] = useState<PinProps[]>([]);
   const [error, setError] = useState(false);
+  const [savingPin, setSavingPin] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   // 🎣 Hooks 🎣
   const { categoryId } = useParams();

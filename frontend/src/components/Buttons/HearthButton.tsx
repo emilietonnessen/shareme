@@ -1,68 +1,47 @@
 import { TiHeart, TiHeartOutline } from 'react-icons/ti';
-import { useState } from 'react';
 
 import SpinnerSmall from '../Spinners/SpinnerSmall';
-import { client } from '../../client';
 
 interface HeartButtonProps {
-  about: string;
+  classes: string;
+  description: string;
+  iconSize: number;
   id: string;
-  saved: boolean;
-  isPinDetailPage?: boolean;
+  isSaved: boolean;
+  loading: boolean;
+  onClick: (
+    id: string,
+    addPin: boolean,
+    setSavingPin: any,
+    setIsSaved: any
+  ) => void;
+  setIsSaved: any;
 }
 
 const HearthButton = ({
-  about,
+  classes,
+  description,
+  iconSize,
   id,
-  saved,
-  isPinDetailPage,
+  isSaved,
+  loading,
+  onClick,
+  setIsSaved,
 }: HeartButtonProps) => {
-  // 🏡 Local state 🏡
-  const [savingPin, setSavingPin] = useState(false);
-  const [isSaved, setIsSaved] = useState(saved);
-
-  // ♟️ Variables ♟️
-  const pinCardButtonStyles =
-    'absolute top-2 right-2 bg-white bg-opacity-70 hover:bg-opacity-100 p-2 rounded-3xl hover:shadow-md cursor-pointer';
-  const pinDetailsButtonStyles =
-    'text-salmon hover:bg-gray-200 w-14 h-14 flex justify-center items-center rounded-full cursor-pointer';
-
-  // Save pin
-  const addOrRemovePinFromFavorites = (id: string, addPin: boolean) => {
-    setSavingPin(true);
-
-    client
-      .patch(id, {
-        set: {
-          saved: addPin,
-        },
-      })
-      .commit()
-      .then((data) => {
-        setIsSaved(data?.saved);
-        setSavingPin(false);
-      })
-      .catch(() => {
-        setIsSaved(false);
-      });
-  };
-
   return (
     <>
       {/* ❤️ Heart icon ❤️ */}
       {isSaved ? (
         <button
-          className={
-            isPinDetailPage ? pinDetailsButtonStyles : pinCardButtonStyles
-          }
+          className={`${classes} rounded-full cursor-pointer`}
           onClick={(e) => {
             e.stopPropagation();
             setIsSaved(false);
-            addOrRemovePinFromFavorites(id, false);
+            onClick(id, false, loading, setIsSaved);
           }}
           aria-live="polite"
         >
-          {savingPin ? (
+          {loading ? (
             <>
               <SpinnerSmall />
 
@@ -70,12 +49,9 @@ const HearthButton = ({
             </>
           ) : (
             <>
-              <TiHeart
-                fontSize={isPinDetailPage ? 25 : 20}
-                className="text-salmon"
-              />
+              <TiHeart fontSize={iconSize} className="text-salmon" />
               <span className="sr-only">
-                Remove image of "{about}" from favorites
+                Remove image of "{description}" from favorites
               </span>
             </>
           )}
@@ -83,29 +59,24 @@ const HearthButton = ({
       ) : (
         <button
           type="button"
-          className={
-            isPinDetailPage ? pinDetailsButtonStyles : pinCardButtonStyles
-          }
+          className={`${classes} rounded-full cursor-pointer`}
           onClick={(e) => {
             e.stopPropagation();
-            addOrRemovePinFromFavorites(id, true);
+            onClick(id, true, loading, setIsSaved);
             setIsSaved(true);
           }}
           aria-live="polite"
         >
-          {savingPin ? (
+          {loading ? (
             <>
               <SpinnerSmall />
               <span className="sr-only">Loading</span>
             </>
           ) : (
             <>
-              <TiHeartOutline
-                fontSize={isPinDetailPage ? 25 : 20}
-                className="m-0"
-              />
+              <TiHeartOutline fontSize={classes ? 25 : 20} className="m-0" />
               <span className="sr-only">
-                Add image of "{about}" to favorites
+                Add image of "{description}" to favorites
               </span>
             </>
           )}
