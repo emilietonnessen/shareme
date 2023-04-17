@@ -1,12 +1,11 @@
-import { Link } from 'react-router-dom';
-
 import DownloadLink from '../Links/DownloadLink';
 import HearthButton from '../Buttons/HearthButton';
-import UserProfileLink from '../Links/ProfileLink';
+import { Link } from 'react-router-dom';
 import { PinProps } from '../../utils/schemaTypes';
+import UserProfileLink from '../Links/ProfileLink';
+import { addOrRemovePinFromFavorites } from '../../utils/pins';
 import { fetchUser } from '../../utils/fetchUser';
 import { urlFor } from '../../client';
-import { addOrRemovePinFromFavorites } from '../../utils/pins';
 
 interface PinCardProps {
   pin: PinProps;
@@ -33,7 +32,7 @@ const PinCard = ({
           className="relative cursor-zoom-in w-auto hover:shadow-lg rounded-lg overflow-hidden  "
           itemProp="contentUrl"
         >
-          <img src={''} alt="" className="rounded-lg w-full" />
+          <img src={image?.asset?.url} alt="" className="rounded-lg w-full" />
           <span className="sr-only">See the image details of {about}</span>
         </Link>
 
@@ -55,7 +54,7 @@ const PinCard = ({
       {/* 🧑 User link 🧑 */}
       <UserProfileLink
         id={user?.sub}
-        image={''}
+        image={user?.picture}
         classesLink="flex p-2 gap-2 items-center text-white mt-1 w-full"
         classesImage="w-8 h-8 rounded-full object-cover"
         classesText="text-black text-sm font-semibold"

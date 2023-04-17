@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import Masonry from 'react-masonry-css';
-
 import PinCard from '../components/Cards/PinCard';
 import { PinProps } from '../utils/schemaTypes';
+import { useState } from 'react';
 
 const breakpointObj = {
   default: 4, // default numbers of columns,
